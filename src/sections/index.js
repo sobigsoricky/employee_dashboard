@@ -1,4 +1,5 @@
 export { default as Head } from './common/head'
+export { ProjectDetails } from "./common/project/ProjectDetails";
 
 // layout
 export { default as Header } from './layout/auth/admin/header'

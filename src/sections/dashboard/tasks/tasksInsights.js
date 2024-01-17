@@ -69,7 +69,11 @@ const tasksInsights = ({ tasks, projects, employees }) => {
                 <Box mt={5}>
                     <Box className="table-table-responsive">
                         {
-                            tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && <table className='table' border="1" rules='all' style={{ borderCollapse: "collapse" }}>
+                            tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && <table
+                                cellPadding={16}
+                                cellSpacing={0}  // Add cellSpacing to set border spacing
+                                style={{ width: "100%", borderCollapse: "collapse" }}  // Add borderCollapse to collapse the borders
+                            >
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -83,8 +87,8 @@ const tasksInsights = ({ tasks, projects, employees }) => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        tasks.map((task, index) => <tr className={task?.isCompleted ? 'completed-task' : 'incomplete-task'}>
+                                    {tasks.map((task, index) => (
+                                        <tr className={task?.isCompleted ? 'completed-task' : 'incomplete-task'} key={index}>
                                             <td>{index + 1}</td>
                                             <td>{task.taskName}</td>
                                             <td>{setProjectStatus(task?.taskDueDate)}</td>
@@ -93,8 +97,8 @@ const tasksInsights = ({ tasks, projects, employees }) => {
                                             <td>{setProject(task?.project)}</td>
                                             <td>{setAssignTo(task?.assignedTo)}</td>
                                             <td>{setCollaborator(task?.collaborator)}</td>
-                                        </tr>)
-                                    }
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         }
