@@ -17,6 +17,7 @@ export { default as Layout } from './layout'
 export { default as UserBox } from './dashboard/userbox'
 export { default as DashboardMenu } from './dashboard/dashboardMenu'
 export { default as LogoContainer } from './dashboard/logoContainer'
+export { default as CalenderTimeline } from './dashboard/calenderTimeline'
 
 // card
 export { default as EmployeeCard } from './cards/Admin/Dashboard/employeeCard'

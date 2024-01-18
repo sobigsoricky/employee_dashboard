@@ -28,9 +28,12 @@ export default async function handler(req, res) {
       email: user.email,
     };
 
-    const token = jwt.sign(tokenData, "employeedashboardjwttoken", { expiresIn: "1d", });
+    const token = jwt.sign(tokenData, "employeedashboardjwttoken", { expiresIn: "1d" });
 
-    res.setHeader("Set-Cookie", `employeetoken=${token}; HttpOnly; Max-Age="86400000"; Path=/; Secure; SameSite=Strict`);
+    const expiresInSeconds = 24 * 60 * 60;
+
+    res.setHeader("Set-Cookie", `employeetoken=${token}; HttpOnly; Max-Age=${expiresInSeconds}; Path=/; Secure; SameSite=Strict`);
+
 
     res.status(200).json({ message: "Login Successfully.", user, token, success: true });
 
