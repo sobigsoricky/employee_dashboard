@@ -5,25 +5,40 @@ const initialState = {
     projects: null,
     error: false,
     message: "",
-    actionT: ""
+    actionT: "",
+    savedProject: null,
+    markProject: null,
+    deleteProject: null,
 }
 
 export const projectReducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case actionTypes.CREATE_PROJECT_SUCCESS:
-            return { ...state, error: false, message: payload, actionT: 'create' }
+            return { ...state, error: false, message: payload.message, savedProject: payload.project, actionT: 'create' }
 
         case actionTypes.CREATE_PROJECT_FAILURE:
-            return { ...state, error: true, message: payload, actionT: 'create' }
+            return { ...state, error: true, message: payload, actionT: 'create', savedProject: null }
 
         case actionTypes.GET_ALL_PROJECTS_SUCCESS:
             return { ...state, error: false, projects: payload, actionT: 'fetct-all' }
 
         case actionTypes.GET_ALL_PROJECTS_FAILURE:
-            return { ...state, error: false, projects: null, actionT: "fetch-all" }
+            return { ...state, error: true, projects: null, actionT: "fetch-all" }
+
+        case actionTypes.MARK_PROJECT_COMPLETE_SUCCESS:
+            return { ...state, error: false, message: payload.message, markProject: payload.markProject, actionT: "mark" }
+
+        case actionTypes.MARK_PROJECT_COMPLETE_FAILURE:
+            return { ...state, error: true, message: payload, markProject: null, actionT: "mark" }
+
+        case actionTypes.REMOVE_PROJECT_SUCCESS:
+            return { ...state, error: false, message: payload.message, deleteProject: payload.deletedProject, actionT: "delete" }
+
+        case actionTypes.REMOVE_PROJECT_FAILURE:
+            return { ...state, error: true, message: payload, deleteProject: null, actionT: "delete" }
 
         case actionTypes.CLEAR_PROJECT_STATE:
-            return { ...state, error: false, message: "", actionT: "", project: null }
+            return { ...state, error: false, message: "", actionT: "", project: null, savedProject: null, markProject: null, deleteProject: null }
 
         default:
             return state

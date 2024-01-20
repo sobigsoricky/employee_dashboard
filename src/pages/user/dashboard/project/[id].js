@@ -1,7 +1,7 @@
 import { Layout } from "@/components";
 import { Head, ProjectDetails } from "@/sections";
-import {  Box } from "@mui/material";
-import  { React,useEffect } from "react";
+import { Box } from "@mui/material";
+import { React, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { parse } from "cookie";
 import { authenticateEmployee } from "@/redux/actions/authAction";
@@ -9,9 +9,9 @@ import authMiddleware from "@/middleware";
 
 
 export default function singleProject({ token }) {
-  
-   const dispatch = useDispatch();
- 
+
+  const dispatch = useDispatch();
+
   const { userInfo } = useSelector((state) => state.employeeAuthReducer);
 
   useEffect(() => {
@@ -25,14 +25,14 @@ export default function singleProject({ token }) {
       <Layout isAdmin={false} userInfo={userInfo} />
       <Box className="dashboard-main" id="projectMain">
         <Box className="dashboard-main-container" p={{ xs: 2, sm: 4 }}>
-          <ProjectDetails />
+          <ProjectDetails isAdmin={false} />
         </Box>
       </Box>
     </>
   );
 }
 
-export  const getServerSideProps = authMiddleware(async (context) => {
+export const getServerSideProps = authMiddleware(async (context) => {
   const { req } = context;
 
   const cookies = parse(req.headers.cookie || "");

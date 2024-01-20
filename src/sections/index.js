@@ -1,5 +1,8 @@
 export { default as Head } from './common/head'
-export { ProjectDetails } from "./common/project/ProjectDetails";
+export { default as ProjectDetails } from "./common/project/ProjectDetails";
+export { default as ProjectMember } from './common/project/projectMember'
+export { default as ProjectTimeline } from './common/project/projectTimeline'
+export { default as ProjectTasks } from './common/project/projectTasks'
 
 // layout
 export { default as Header } from './layout/auth/admin/header'

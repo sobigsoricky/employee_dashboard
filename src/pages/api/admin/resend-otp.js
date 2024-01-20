@@ -37,7 +37,7 @@ const sendOTPverificationEmail = async ({ _id, email }, res) => {
     const mailOptions = {
       from: process.env.USER_EMAIL,
       to: email,
-      subject: "Verify Your Email",
+      subject: "Email Verification - Employee Dashboard",
       html: `<p> Enter <b>${otp} </b> in the app to verify your email address and complete signup</p><p>This code <b> expires in 1 hour </b></p>`,
     };
     const saltRounds = 10;

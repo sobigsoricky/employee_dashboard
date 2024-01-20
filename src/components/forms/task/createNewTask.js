@@ -9,7 +9,7 @@ import { getAllEmployees } from '@/redux/actions/admin/employee-action';
 import { createTask, sendTaskNotification } from '@/redux/actions/taskAction';
 import { toast } from 'react-toastify'
 
-const CreateNewTask = ({ userInfo, setShowTasks }) => {
+const CreateNewTask = ({ userInfo, setShowForm }) => {
     const { projects } = useSelector(state => state.projectReducer);
     const { employees } = useSelector(state => state.adminEmployeeReducer);
     const { error, message, actionT, savedTask } = useSelector(state => state.taskReducer)
@@ -105,7 +105,7 @@ const CreateNewTask = ({ userInfo, setShowTasks }) => {
             setAssignTo([])
             setCollaborator([])
             reset()
-            setShowTasks(false)
+            setShowForm(false)
             handleTaskCreateNotification(savedTask)
         } else if (error && actionT === "create") {
             toast.error(message)

@@ -42,17 +42,21 @@ const projectSchema = new mongoose.Schema({
     type: String,
   },
 
-  tasks: [
-    {
-      type: String,
-    },
-  ],
-
   phases: [
     {
       type: [phaseSchema],
     },
   ],
+
+  isProjectComplete: {
+    type: Boolean,
+    default: false
+  },
+
+  createdBy: {
+    type: String,
+  }
+
 });
 
 const Project =

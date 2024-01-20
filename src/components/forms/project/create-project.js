@@ -1,54 +1,34 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Grid,
-  TextField,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { Box, Button, Grid, TextField, InputLabel, Select, MenuItem, } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { getTeams } from "@/redux/actions/admin/teamAction";
 import { useForm, useFieldArray } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  clearProjectState,
-  createProject,
-} from "@/redux/actions/admin/project-action";
+import { clearProjectState, createProject, sendProjectNotification, } from "@/redux/actions/admin/project-action";
 import { toast } from "react-toastify";
 import { getAllEmployees } from "@/redux/actions/admin/employee-action";
+import { getAdmins } from "@/redux/actions/admin/adminAction";
 
-const CreateProject = ({ setAddNewProject }) => {
+const CreateProject = ({ setAddNewProject, userInfo }) => {
   const dispatch = useDispatch();
   const { teams } = useSelector((state) => state.teamReducer);
   const { employees } = useSelector((state) => state.adminEmployeeReducer);
-  const { message, actionT, error } = useSelector(
-    (state) => state.projectReducer
-  );
+  const { message, actionT, error, savedProject } = useSelector((state) => state.projectReducer);
+  const { admins } = useSelector((state) => state.adminReducer)
 
   const schema = yup.object().shape({
     projectName: yup.string().required("Project name is required."),
     dueDate: yup.date().required("Due date is required."),
     assignedTeam: yup.array().min(1, "Assign at least one team."),
-    collaborator: yup.array(),
+    // collaborator: yup.array(),
     descriptions: yup.string().required("Descriptions are required."),
     // phaseName: yup.string().required("Phase name is required."),
     // phaseStart: yup.date().required("Starting date of phase is required."),
     // phaseEnd: yup.date().required("End  date of phase is required."),
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    getValues,
-    watch,
-    control,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, reset, setValue, getValues, watch, control, formState: { errors }, } = useForm({
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
@@ -60,17 +40,15 @@ const CreateProject = ({ setAddNewProject }) => {
 
   useEffect(() => {
     dispatch(getTeams());
-  }, []);
-
-  useEffect(() => {
     dispatch(getAllEmployees());
-  }, []);
+    dispatch(getAdmins())
+  }, [dispatch]);
 
   const currentDate = new Date().toISOString().split("T")[0];
 
   const onSubmit = (data) => {
-    console.log("DEBUG: ", JSON.stringify(data));
-    dispatch(createProject(data));
+    const newData = { ...data, createdBy: userInfo._id }
+    dispatch(createProject(newData));
   };
 
   const handleTeamChange = (selectedTeams) => {
@@ -81,12 +59,34 @@ const CreateProject = ({ setAddNewProject }) => {
     setValue("collaborator", selectedCollaborator);
   };
 
+  console.log(userInfo)
+
+  const handleSendProjectCreateNotification = (project) => {
+
+    if (project && teams && teams !== null && teams !== undefined && teams !== "" && teams.length > 0 && employees) {
+      const filteredTeams = teams.filter(team => project?.assignedTeam.includes(team._id))
+      if (filteredTeams && filteredTeams !== null && filteredTeams !== undefined && filteredTeams !== "" && filteredTeams.length > 0) {
+        const filteredEmp = filteredTeams.flatMap(item => {
+          return employees.filter(employee => item.members.includes(employee._id))
+        })
+
+        const filteredMember = filteredEmp.filter(member => member._id !== project?.collaborator[0])
+        const manager = filteredEmp.filter(member => member._id === project?.collaborator[0])
+        const createdBy = admins.filter(admin => admin._id === project?.createdBy)
+        const newData = { members: filteredMember, manager, createdBy, action: 'create', project }
+        dispatch(sendProjectNotification(newData))
+      }
+    }
+
+  }
+
   useEffect(() => {
     if (!error && actionT === "create") {
       toast.success(message);
       reset();
       setAddNewProject(false);
-      dispatch(clearProjectState());
+      handleSendProjectCreateNotification(savedProject)
+      // dispatch(clearProjectState());
     } else if (error && actionT === "create") {
       toast.error(message);
       reset();
@@ -151,14 +151,13 @@ const CreateProject = ({ setAddNewProject }) => {
                       </p>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <InputLabel>Collaborator</InputLabel>
+                      <InputLabel>Project Manager</InputLabel>
                       {employees &&
                         employees !== null &&
                         employees !== undefined &&
                         employees !== "" &&
                         employees.length > 0 && (
                           <Select
-                            multiple
                             fullWidth
                             {...register("collaborator")}
                             onChange={(e) =>
@@ -201,7 +200,7 @@ const CreateProject = ({ setAddNewProject }) => {
                                 type="text"
                                 fullWidth
                                 {...register(`${id}.phaseName`)}
-                                // name="phaseName"
+                              // name="phaseName"
                               />
                               <p className="text-danger">
                                 {errors.phaseName?.message}
@@ -267,7 +266,7 @@ const CreateProject = ({ setAddNewProject }) => {
                     </Grid>
                     <Grid item xs={12}>
                       <Button type="submit" className="btn--dark me-3">
-                        Create Team
+                        Create Project
                       </Button>
                       <Button
                         type="button"

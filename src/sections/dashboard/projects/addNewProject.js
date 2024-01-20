@@ -2,13 +2,13 @@ import React from 'react'
 import { Box, Typography } from '@mui/material'
 import { CreateProject } from '@/components'
 
-const AddNewProject = ({ setAddNewProject }) => {
+const AddNewProject = ({ setAddNewProject, userInfo }) => {
     return (
         <>
             <Box>
                 <Typography variant='h1' className='fw-semibold'>Add Project</Typography>
                 <Box>
-                    <CreateProject setAddNewProject={setAddNewProject} />
+                    <CreateProject userInfo={userInfo} setAddNewProject={setAddNewProject} />
                 </Box>
             </Box>
         </>

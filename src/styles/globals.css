@@ -379,6 +379,21 @@ h6 {
   -o-transform: translate(-50%, -50%);
 }
 
+table {
+  border: 1px solid #ddd;
+}
+
 table tr.completed-task td {
   background-color: #f0f0f0;
+}
+
+table th,
+table td {
+  white-space: nowrap;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+.react-calendar-timeline .rct-header-root {
+  background-color: var(--grey) !important;
 }

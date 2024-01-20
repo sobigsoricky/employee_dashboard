@@ -4,18 +4,20 @@ import { Box, Grid } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { parse } from 'cookie'
-import {authenticateEmployee  } from '@/redux/actions/authAction'
+import { authenticateEmployee } from '@/redux/actions/authAction'
 import authMiddleware from '@/middleware'
 import { useRouter } from 'next/router'
 
 const index = ({ token }) => {
-      const [addNewProject,setAddNewProject]=useState(false);
+    const [addNewProject, setAddNewProject] = useState(false);
     const dispatch = useDispatch()
     const { userInfo } = useSelector(state => state.employeeAuthReducer)
-const route=useRouter();
+    const route = useRouter();
+
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee (token))
+        if (token) dispatch(authenticateEmployee(token))
     }, [token])
+
     return (
         <>
             <Head title="Project | Employee" />
@@ -23,7 +25,7 @@ const route=useRouter();
             <Box className="dashboard-main" id="projectMain">
                 <Box className="dashboard-main-container" p={{ xs: 2, sm: 4 }}>
                     {
-                        addNewProject ? <AddNewProject setAddNewProject={setAddNewProject} /> : <ManageProject setAddNewProject={setAddNewProject} isAdmin={false}/>
+                        addNewProject ? <AddNewProject setAddNewProject={setAddNewProject} /> : <ManageProject userInfo={userInfo} setAddNewProject={setAddNewProject} isAdmin={false} />
                     }
                 </Box>
             </Box>
