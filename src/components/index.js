@@ -9,6 +9,7 @@ export { default as CreateProject } from './forms/project/create-project'
 export { default as CreateTask } from './forms/task/createNewTask'
 export { default as EmployeeLogin } from './forms/auth/employee/login'
 export { default as OTP } from './forms/auth/employee/otp'
+export { default as BoardColumn } from './forms/task/boardColumn'
 
 // layout
 export { default as Layout } from './layout'
@@ -23,6 +24,12 @@ export { default as CalenderTimeline } from './dashboard/calenderTimeline'
 export { default as EmployeeCard } from './cards/Admin/Dashboard/employeeCard'
 export { default as TeamCard } from './cards/Admin/Dashboard/teamCard'
 export { default as DocumentCard } from './cards/common/DocumentCard'
+export { default as TaskCard } from './cards/common/taskCard'
 
 // modal
 export { default as AddTaskModal } from './modal/addTaskModal'
+export { default as AddTaskColumnModal } from './modal/addTaskColumnModal';
+export { default as TaskDetailModal } from './modal/taskDetailModal'
+
+// list
+export { default as TaskList } from './cards/common/taskList'

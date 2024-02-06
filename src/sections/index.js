@@ -3,6 +3,7 @@ export { default as ProjectDetails } from "./common/project/ProjectDetails";
 export { default as ProjectMember } from './common/project/projectMember'
 export { default as ProjectTimeline } from './common/project/projectTimeline'
 export { default as ProjectTasks } from './common/project/projectTasks'
+export { default as BoardView } from './common/tasks/boardView'
 
 // layout
 export { default as Header } from './layout/auth/admin/header'

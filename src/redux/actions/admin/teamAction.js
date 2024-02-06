@@ -3,9 +3,9 @@ import actionTypes from "../actionTypes";
 export const createTeam = (data) => async (dispatch) => {
     try {
         const response = await fetch('/api/admin/create-team', { method: "POST", body: JSON.stringify({ data }) })
-        const { success, message } = await response.json()
+        const { success, message, team } = await response.json()
         if (success) {
-            dispatch({ type: actionTypes.CREATE_TEAM_SUCCESS, payload: message })
+            dispatch({ type: actionTypes.CREATE_TEAM_SUCCESS, payload: { message, team } })
         } else if (!success) {
             dispatch({ type: actionTypes.CREATE_TEAM_FAILURE, payload: message })
         }

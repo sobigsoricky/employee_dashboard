@@ -8,9 +8,9 @@ export const createEmployeeProfile = (formData) => async (dispatch) => {
             body: formData,
         });
 
-        const { message, success } = await response.json()
+        const { message, success, createEmployee } = await response.json()
         if (success) {
-            dispatch({ type: actionTypes.CREATE_EMPLOYEE_SUCCESS, payload: message });
+            dispatch({ type: actionTypes.CREATE_EMPLOYEE_SUCCESS, payload: { message, createEmployee } });
         } else if (!success) {
             dispatch({ type: actionTypes.CREATE_EMPLOYEE_FAILURE, payload: message });
         }
@@ -51,13 +51,17 @@ export const getEmployeeDetail = (id) => async (dispatch) => {
 export const removeEmployee = (id) => async (dispatch) => {
     try {
         const response = await fetch('/api/admin/remove-employee', { method: 'POST', body: JSON.stringify({ id }) })
-        const { success, message } = await response.json()
+        const { success, message, removedEmployee } = await response.json()
         if (success) {
-            dispatch({ type: actionTypes.REMOVE_EMPLOYEE_SUCCESS, payload: message })
+            dispatch({ type: actionTypes.REMOVE_EMPLOYEE_SUCCESS, payload: { message, removedEmployee } })
         } else if (!success) {
             dispatch({ type: actionTypes.REMOVE_EMPLOYEE_FAILURE, payload: message })
         }
     } catch (error) {
         dispatch({ type: actionTypes.REMOVE_EMPLOYEE_FAILURE, payload: error.message })
     }
+}
+
+export const SendEmployeeCreationNotification = (data) => async (dispatch) => {
+    const response = await fetch('/api/admin/send-employee-creation-notification', { method: 'POST', body: JSON.stringify({ data }) })
 }

@@ -1,23 +1,20 @@
+import React, { useEffect } from 'react'
 import { Layout } from "@/components";
 import { Head, ProjectDetails } from "@/sections";
 import { Box } from "@mui/material";
-import { React, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { parse } from "cookie";
-import { authenticateEmployee } from "@/redux/actions/authAction";
+import { authenticateUser } from "@/redux/actions/authAction";
 import authMiddleware from "@/middleware";
 
-
-export default function singleProject({ token }) {
-
+const SingleProject = ({ token }) => {
     const dispatch = useDispatch();
-
-    const { userInfo } = useSelector((state) => state.employeeAuthReducer);
-
+    const { userInfo } = useSelector(state => state.authReducer)
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token));
-    }, [token]);
+        if (token) dispatch(authenticateUser(token))
+    }, [token])
 
+    console.log(token)
 
     return (
         <>
@@ -29,18 +26,20 @@ export default function singleProject({ token }) {
                 </Box>
             </Box>
         </>
-    );
+    )
 }
+
+export default SingleProject
 
 export const getServerSideProps = authMiddleware(async (context) => {
     const { req } = context;
 
-    const cookies = parse(req.headers.cookie || "");
-    const token = cookies["token"] || null;
+    const cookies = parse(req.headers.cookie || '');
+    const token = cookies['token'] || null
 
     return {
         props: {
-            token,
-        },
+            token
+        }
     };
 });

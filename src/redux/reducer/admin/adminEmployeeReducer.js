@@ -5,13 +5,15 @@ const initialState = {
     employees: null,
     message: "",
     actionT: "",
-    error: false
+    error: false,
+    createEmployee: null,
+    removedEmployee: null
 }
 
 export const adminEmployeeReducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case actionTypes.CREATE_EMPLOYEE_SUCCESS:
-            return { ...state, message: payload, error: false, actionT: 'create' }
+            return { ...state, message: payload.message, error: false, actionT: 'create', createEmployee: payload.createEmployee }
 
         case actionTypes.CREATE_EMPLOYEE_FAILURE:
             return { ...state, message: payload, error: true, actionT: 'create' }
@@ -29,13 +31,13 @@ export const adminEmployeeReducer = (state = initialState, { type, payload }) =>
             return { ...state, employee: null, message: payload, error: true, actionT: "fetchEmp" }
 
         case actionTypes.REMOVE_EMPLOYEE_SUCCESS:
-            return { ...state, message: payload, error: false, actionT: "remove" }
+            return { ...state, message: payload.message, error: false, actionT: "remove", removedEmployee: payload.removedEmployee }
 
         case actionTypes.REMOVE_EMPLOYEE_FAILURE:
-            return { ...state, message: payload, error: true, actionT: "remove" }
+            return { ...state, message: payload, error: true, actionT: "remove", removedEmployee: null }
 
         case actionTypes.CLEAR_EMPLOYEE_STATE:
-            return { ...state, employee: null, message: "", error: false, actionT: "" }
+            return { ...state, employee: null, message: "", error: false, actionT: "", removedEmployee: null, createEmployee: null }
 
         default:
             return state

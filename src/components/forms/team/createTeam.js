@@ -13,7 +13,7 @@ const CreateTeam = ({ setAddNewTeam }) => {
     const [member, setMember] = useState([])
     const [manager, setManager] = useState([])
     const { employees } = useSelector(state => state.adminEmployeeReducer)
-    const { error, actionT, message } = useSelector(state => state.teamReducer)
+    const { error, actionT, message, savedTeam } = useSelector(state => state.teamReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -46,6 +46,10 @@ const CreateTeam = ({ setAddNewTeam }) => {
         dispatch(createTeam(data))
     }
 
+    const sendTeamNotification = () => {
+
+    }
+
     useEffect(() => {
         if (!error && actionT === "create") {
             console.log(error, actionT, message)
@@ -53,6 +57,7 @@ const CreateTeam = ({ setAddNewTeam }) => {
             setManager([])
             setMember([])
             reset()
+            sendTeamNotification(savedTeam)
             setAddNewTeam(false)
         } else if (error && actionT === "create") {
             toast.error(message)

@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  IconButton,
-  Slider,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, Divider, Grid, IconButton, Slider, Typography, } from "@mui/material";
 import React, { useState, useRef, useEffect } from "react";
 import Cropper from "react-easy-crop";
 import { AddAPhoto } from "@mui/icons-material";
@@ -18,13 +8,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { createEmployeeProfile } from "@/redux/actions/admin/employee-action";
+import { SendEmployeeCreationNotification, createEmployeeProfile } from "@/redux/actions/admin/employee-action";
 import { AdminEmployeesSection } from "@/sections";
+import { getAdmins } from "@/redux/actions/admin/adminAction";
+import { getTeams } from "@/redux/actions/admin/teamAction";
 
 const MainContainer = () => {
-  const { message, error, actionT } = useSelector(
-    (state) => state.adminEmployeeReducer
-  );
+  const { message, error, actionT, createEmployee } = useSelector((state) => state.adminEmployeeReducer);
+  const { teams } = useSelector((state) => state.teamReducer)
+  const { admins } = useSelector((state) => state.adminReducer)
   const [showEmp, setShowEmp] = useState(true);
   const [imageFile, setImageFile] = useState(null);
   const [selectedTab, setSelectedTab] = useState("details");
@@ -34,23 +26,18 @@ const MainContainer = () => {
 
   const triggerFileSelectPopup = () => inputRef.current.click();
 
+  useEffect(() => { dispatch(getAdmins()); dispatch(getTeams()) }, [dispatch])
+
   const schema = yup.object().shape({
     firstName: yup.string().required("First name is required."),
     lastName: yup.string().required("Last name is required."),
     designation: yup.string().required("Designation is required."),
     email: yup.string().email("Invalid email.").required("Email is required."),
-    phone: yup
-      .string()
-      .matches(/^[0-9]{10}$/, "Invalid phone number.")
-      .required("Phone number is required."),
-
+    phone: yup.string().matches(/^[0-9]{10}$/, "Invalid phone number.").required("Phone number is required."),
     isManager: yup.boolean()
   });
 
-  const formMethods = useForm({
-    mode: "onBlur",
-    resolver: yupResolver(schema),
-  });
+  const formMethods = useForm({ mode: "onBlur", resolver: yupResolver(schema), });
 
   const handleProfileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -81,12 +68,21 @@ const MainContainer = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(error, actionT, message);
+  const handleSendEmployeeCreateNotification = (emp) => {
+    const a = admins.map(item => item.email)
+    const ft = teams.filter(team => emp.teams.includes(team._id))
+    const t = ft.map(item => item.teamName)
+    const data = { admins: a, emp, t: t, action: 'create' }
+    dispatch(SendEmployeeCreationNotification(data))
+  }
 
+
+
+  useEffect(() => {
     if (actionT === "create" && !error) {
       toast.success(message);
       formMethods.reset();
+      handleSendEmployeeCreateNotification(createEmployee)
       setImage(null);
       setShowEmp(true)
     } else if (actionT === "create" && error) {

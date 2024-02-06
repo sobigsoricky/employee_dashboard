@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       };
 
       const newEmployee = new Employee(employeeData);
-      await newEmployee.save();
+      const createEmployee = await newEmployee.save();
 
       // Update team members array
       const employeeId = newEmployee._id;
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
 
       res
         .status(200)
-        .json({ message: "Employee created successfully", success: true });
+        .json({ message: "Employee created successfully", success: true, createEmployee });
     } else {
       res.status(400).json({ message: "No file uploaded", success: false });
     }

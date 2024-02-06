@@ -397,3 +397,108 @@ table td {
 .react-calendar-timeline .rct-header-root {
   background-color: var(--grey) !important;
 }
+
+.board-view {
+  height: 80vh;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.board-view .list-container {
+  background-color: #f8fafb;
+  flex: 0 0 340px;
+  margin: 1rem;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+  position: relative;
+}
+
+.board-view::-webkit-scrollbar {
+  height: 2px;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -ms-border-radius: 1px;
+  -o-border-radius: 1px;
+}
+
+.board-view::-webkit-scrollbar-track {
+  background-color: #f8fafb;
+}
+
+.board-view::-webkit-scrollbar-thumb {
+  background-color: #000;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -ms-border-radius: 1px;
+  -o-border-radius: 1px;
+}
+
+.board-view .list-container .list-name {
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}
+
+.board-view .list-container .list-task-container {
+  min-height: 50px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar-track {
+  background-color: #8a9096;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar-thumb {
+  background-color: #777;
+}
+
+.board-view .list-container .list-task-container .task-card {
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}
+
+.board-view .list-container .list-task-container .task-card .assignToBox .date {
+  font-size: 0.875rem !important;
+  color: #8a9096;
+}
+
+.board-view .list-container .list-task-container .task-card .collaborator {
+  display: flex;
+}
+
+.MuiAvatarGroup-avatar {
+  flex-direction: row !important;
+}
+
+#modal .MuiDialog-container {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+#modal .MuiDialog-container .MuiDialog-paper {
+  margin: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  height: 100%;
+  max-height: none;
+}

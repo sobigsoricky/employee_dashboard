@@ -8,7 +8,7 @@ import BoardView from './views/boardView'
 import { getAllProjects } from '@/redux/actions/admin/project-action'
 import { getAllEmployees } from '@/redux/actions/admin/employee-action'
 
-const MyTask = ({ userInfo }) => {
+const MyTask = ({ userInfo, handleAddTaskToList }) => {
     const [hasTask, setHasTask] = useState()
     const [userTasks, setUserTask] = useState([])
     const [open, setOpen] = useState(false)
@@ -89,18 +89,17 @@ const MyTask = ({ userInfo }) => {
         }
     }, [error, actionT]);
 
-
     return (
         <>
             <Box sx={{ height: "100%" }}>
                 {
                     userTasks && userTasks !== null && userTasks !== undefined && userTasks !== "" && userTasks.length > 0 && projects && projects !== null && projects !== undefined && projects !== "" && projects.length > 0 && employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 ? <Box>
                         <Box mt={4} className="tab-container">
-                            <Button className={`tab ${view === 1 ? 'active' : ''}`} onClick={() => setView(1)}>List</Button>
-                            <Button className={`tab ${view === 2 ? 'active' : ''}`} onClick={() => setView(2)}>Board</Button>
+                            <Button className={`tab ${view === 1 ? 'active' : ''}`} onClick={() => setView(1)}>Board</Button>
+                            <Button className={`tab ${view === 2 ? 'active' : ''}`} onClick={() => setView(2)}>List</Button>
                         </Box>
                         <Box mt={2}>
-                            {view === 1 ? <ListView tasks={userTasks} projects={projects} employees={employees} handleMarkComplete={handleMarkComplete} handleTaskDelete={handleTaskDelete} /> : view === 2 ? <BoardView tasks={userTasks} projects={projects} employees={employees} /> : null}
+                            {view === 2 ? <ListView tasks={userTasks} projects={projects} employees={employees} handleMarkComplete={handleMarkComplete} handleTaskDelete={handleTaskDelete} /> : view === 1 ? <BoardView tasks={userTasks} projects={projects} employees={employees} handleAddTaskToList={handleAddTaskToList} /> : null}
                         </Box>
                     </Box> : <Box className="message-box">
                         <Typography variant="h2" align='center' className='fw-semibold'>You have no tasks.</Typography>

@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 import Task from '@/models/taskModel';
+import Column from '@/models/kanbanListModal';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
 
 
-        const { assignedTo, priority, taskDueDate, taskName, description, project, collaborator, createdBy } = req.body;
+        const { assignedTo, priority, taskDueDate, taskName, description, project, collaborator, createdBy, taskCurrentStatus } = req.body;
 
         const parsedAssignedTo = JSON.parse(assignedTo);
         const parsedCollaborator = JSON.parse(collaborator);
@@ -54,10 +54,17 @@ export default async function handler(req, res) {
             attachments: req.files.map((file) => `/images/upload/${file.filename}`),
             project,
             collaborator: parsedCollaborator,
-            createdBy
+            createdBy,
+            taskCurrentStatus
         });
 
         const savedTask = await newTask.save();
+
+        const todoColumn = await Column.findOne({ columnName: "To Do" });
+
+        todoColumn.tasks.push(savedTask._id);
+
+        await todoColumn.save();
 
         res.status(201).json({ success: true, message: 'Task created successfully', task: savedTask });
     } catch (error) {

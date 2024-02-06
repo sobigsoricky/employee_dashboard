@@ -1,23 +1,38 @@
-import { removeEmployee } from "@/redux/actions/admin/employee-action";
+import { removeEmployee, SendEmployeeCreationNotification } from "@/redux/actions/admin/employee-action";
 import { Edit } from "@mui/icons-material";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from "next/router";
 import { toast } from 'react-toastify'
+import { getAdmins } from "@/redux/actions/admin/adminAction";
+import { getTeams } from "@/redux/actions/admin/teamAction";
 
 const EmployeeDetails = ({ employee }) => {
-  const { message, actionT, error } = useSelector(state => state.adminEmployeeReducer)
+  const { message, actionT, error, removedEmployee } = useSelector(state => state.adminEmployeeReducer)
+  const { teams } = useSelector((state) => state.teamReducer)
+  const { admins } = useSelector((state) => state.adminReducer)
   const dispatch = useDispatch()
   const router = useRouter()
+
+  useEffect(() => { dispatch(getAdmins()); dispatch(getTeams()) }, [dispatch])
 
   const handleRemoveEmployee = () => {
     if (employee) dispatch(removeEmployee(employee?._id))
   }
 
+  const handleSendNotification = (emp) => {
+    const a = admins.map(item => item.email)
+    const ft = teams.filter(team => emp.teams.includes(team._id))
+    const t = ft.map(item => item.teamName)
+    const data = { admins: a, emp, t: t, action: 'remove' }
+    dispatch(SendEmployeeCreationNotification(data))
+  }
+
   useEffect(() => {
     if (!error && actionT === "remove") {
       toast.success(message)
+      handleSendNotification(removedEmployee)
       router.push('/admin/dashboard/user/')
     } else if (error && actionT === "remove") {
       toast.error(message)

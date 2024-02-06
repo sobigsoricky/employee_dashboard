@@ -39,6 +39,10 @@ const taskSchema = new mongoose.Schema({
     isCompleted: {
         type: Boolean,
         default: false
+    },
+    taskCurrentStatus: {
+        type: String,
+        default: 'todo'
     }
 });
 

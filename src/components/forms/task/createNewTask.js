@@ -8,10 +8,12 @@ import { getAllProjects } from '@/redux/actions/admin/project-action';
 import { getAllEmployees } from '@/redux/actions/admin/employee-action';
 import { createTask, sendTaskNotification } from '@/redux/actions/taskAction';
 import { toast } from 'react-toastify'
+import { getAdmins } from '@/redux/actions/admin/adminAction';
 
-const CreateNewTask = ({ userInfo, setShowForm }) => {
+const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin, handleGetBoardColumns }) => {
     const { projects } = useSelector(state => state.projectReducer);
     const { employees } = useSelector(state => state.adminEmployeeReducer);
+    const { admins } = useSelector((state) => state.adminReducer)
     const { error, message, actionT, savedTask } = useSelector(state => state.taskReducer)
     const [activePriority, setActivePriority] = useState(null);
     const [assignTo, setAssignTo] = useState([])
@@ -23,7 +25,10 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
     useEffect(() => {
         dispatch(getAllProjects());
         dispatch(getAllEmployees());
+        dispatch(getAdmins())
     }, [dispatch]);
+
+    console.log(employees, projects, 'iiii')
 
     const schema = yup.object().shape({
         taskName: yup.string().required('Task name is required.'),
@@ -73,6 +78,7 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
         formData.append('project', data?.project || 'anynomous');
         formData.append('description', data?.description);
         formData.append('createdBy', userInfo?._id)
+        formData.append('taskCurrentStatus', taskCurrentStatus || 'todo')
 
         if (data?.attachments && data.attachments.length > 0) {
             for (let i = 0; i < data.attachments.length; i++) {
@@ -83,19 +89,56 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
     };
 
     const handleTaskCreateNotification = (data) => {
-        const filteredCollaborator = employees.filter(employee => data.collaborator.includes(employee._id));
-        const FilterAssignTo = employees.filter(employee => data.assignedTo.includes(employee._id))
-        const filterCreatedBy = employees.filter(employee => employee._id === data.createdBy)
+        const filteredCollaborator = [
+            ...admins.filter(admin => data.collaborator.includes(admin._id)),
+            ...employees.filter(employee => data.collaborator.includes(employee._id))
+        ];
 
-        const collaborator = filteredCollaborator.map(item => ({ firstName: item.firstName, lastName: item.lastName, email: item.email, _id: item._id }))
-        const assignTo = filterCreatedBy.map(item => ({ firstName: item.firstName, lastName: item.lastName, email: item.email, _id: item._id }))
+        const FilterAssignTo = [
+            ...admins.filter(admin => data.assignedTo.includes(admin._id)),
+            ...employees.filter(employee => data.assignedTo.includes(employee._id))
+        ];
 
-        const createdBy = { firstName: filterCreatedBy[0].firstName, lastName: filterCreatedBy[0].lastName, email: filterCreatedBy[0].email, _id: filterCreatedBy[0]._id }
+        const filterCreatedBy = [
+            ...admins.filter(admin => admin._id === data.createdBy),
+            ...employees.filter(employee => employee._id === data.createdBy)
+        ];
 
-        const NewData = { collaborator, assignTo, createdBy, task: data, action: "create" }
+        const collaborator = filteredCollaborator.map(item => ({
+            firstName: item?.firstName || item?.details?.firstName,
+            lastName: item?.lastName || item?.details?.lastName,
+            email: item?.email,
+            _id: item?._id
+        }));
 
-        dispatch(sendTaskNotification(NewData))
-    }
+        const assignTo = FilterAssignTo.map(item => ({
+            firstName: item?.firstName || item?.details?.firstName,
+            lastName: item?.lastName || item?.details?.lastName,
+            email: item?.email,
+            _id: item?._id
+        }));
+
+        const createdBy = {
+            firstName: filterCreatedBy[0]?.details?.firstName || filterCreatedBy[0]?.firstName,
+            lastName: filterCreatedBy[0]?.details?.lastName || filterCreatedBy[0]?.lastName,
+            email: filterCreatedBy[0]?.email,
+            _id: filterCreatedBy[0]?._id
+        };
+
+        const NewData = {
+            collaborator: collaborator,
+            assignTo: assignTo,
+            createdBy: createdBy,
+            task: data,
+            action: "create"
+        };
+
+        console.log(NewData, 'kkkk');
+
+        dispatch(sendTaskNotification(NewData));
+    };
+
+
 
 
     useEffect(() => {
@@ -105,7 +148,8 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
             setAssignTo([])
             setCollaborator([])
             reset()
-            setShowForm(false)
+            handleGetBoardColumns()
+            setShowTasksForm(false)
             handleTaskCreateNotification(savedTask)
         } else if (error && actionT === "create") {
             toast.error(message)
@@ -203,9 +247,12 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
                                             <Box>
                                                 {
                                                     employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 && <> <InputLabel>Assigned To</InputLabel>
-                                                        <Select multiple fullWidth value={assignTo} name="assignedTo" {...register('assignedTo')} onChange={(e) => handleAssignToChange(e)} >
+                                                        <Select fullWidth value={assignTo} name="assignedTo" {...register('assignedTo')} onChange={(e) => handleAssignToChange(e)} >
                                                             {
                                                                 employees.map(emp => <MenuItem key={emp._id} value={emp._id}>{emp.firstName} {emp.lastName}</MenuItem>)
+                                                            }
+                                                            {
+                                                                admins && admins !== null && admins !== undefined && admins !== "" && admins.map(item => <MenuItem key={item._id} value={item._id}>{item?.details?.firstName} {item?.details?.lastName}</MenuItem>)
                                                             }
                                                         </Select>
                                                         {errors?.assignedTo && <Typography className="text-danger">{errors?.assignedTo?.message}</Typography>}
@@ -220,6 +267,9 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
                                                         <Select multiple fullWidth value={collaborator} name="collaborator" {...register('collaborator')} onChange={(e) => handleCollaboratorChange(e)}>
                                                             {
                                                                 employees.map(emp => <MenuItem key={emp._id} value={emp._id}>{emp.firstName} {emp.lastName}</MenuItem>)
+                                                            }
+                                                            {
+                                                                admins && admins !== null && admins !== undefined && admins !== "" && admins.map(item => <MenuItem key={item._id} value={item._id}>{item?.details?.firstName} {item?.details?.lastName}</MenuItem>)
                                                             }
                                                         </Select></>
                                                 }
@@ -259,7 +309,7 @@ const CreateNewTask = ({ userInfo, setShowForm }) => {
                                         <Grid item xs={12}>
                                             <Box>
                                                 <Button type="submit" className='btn--dark me-3'>Create Task</Button>
-                                                <Button type="submit" className='btn--dark-outlined'>Discard</Button>
+                                                <Button className='btn--dark-outlined' onClick={() => setShowTasksForm(false)}>Discard</Button>
                                             </Box>
                                         </Grid>
                                     </Grid>

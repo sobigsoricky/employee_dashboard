@@ -32,6 +32,8 @@ export const createTask = (formData) => async (dispatch) => {
 
 export const sendTaskNotification = (data) => async (dispatch) => {
     const response = await fetch('/api/send-task-notification', { method: 'POST', body: JSON.stringify({ data }) })
+    const { success } = await response.json()
+    if (success) { dispatch({ type: actionTypes.CLEAR_TASK_STATE }) }
 }
 
 export const handleTaskMarkComplete = (t) => async (dispatch) => {
