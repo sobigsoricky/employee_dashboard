@@ -36,3 +36,8 @@ export { default as DocumentUploadAndDisplay } from './employee-dashboard/profil
 
 // task
 export { default as MyTask } from './employee-dashboard/tasks/myTask'
+
+// reporting
+
+export { default as WorkUpdate } from './employee-dashboard/reporting/workUpdate'
+export { default as WorkHistory } from './employee-dashboard/reporting/workHistory'

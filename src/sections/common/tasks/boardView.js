@@ -12,7 +12,6 @@ const BoardView = ({ projects, employees, tasks, isAdmin, columns, handleGetBoar
 
     const onDragEnd = (result) => {
         const { source, destination } = result;
-        console.log(source, destination)
 
         // Condition 1: Drag and drop to unknown destination
         if (!destination) { return; }
@@ -64,7 +63,7 @@ const BoardView = ({ projects, employees, tasks, isAdmin, columns, handleGetBoar
             <DragDropContext onDragEnd={onDragEnd}>
                 <Box className="table-responsive board-view">
                     {
-                        columns && columns !== null && columns !== undefined && columns !== "" && columns.length > 0 && columns.map(item => <TaskList key={item?._id} listName={item?.columnName} total={item?.tasks.length} employees={employees} color={item.color} id={item?._id} tasks={tasks} listTasks={item?.tasks} userInfo={userInfo} isAdmin={isAdmin} handleOpenTaskDetailModal={handleOpenTaskDetailModal} />)
+                        columns && columns !== null && columns !== undefined && columns !== "" && columns.length > 0 && columns.map(item => <TaskList key={item?._id} listName={item?.columnName} total={item?.tasks.length} employees={employees} color={item.color} listId={item?._id} tasks={tasks} listTasks={item?.tasks} userInfo={userInfo} isAdmin={isAdmin} handleOpenTaskDetailModal={handleOpenTaskDetailModal} />)
                     }
                 </Box>
             </DragDropContext>

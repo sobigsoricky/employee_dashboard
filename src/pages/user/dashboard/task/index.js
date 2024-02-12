@@ -12,6 +12,7 @@ import { getTasks } from "@/redux/actions/taskAction";
 import { getAllProjects } from '@/redux/actions/admin/project-action'
 import { getAllEmployees } from '@/redux/actions/admin/employee-action'
 import { getBoardColumns } from "@/redux/actions/admin/boardAction"
+import { getAdmins } from '@/redux/actions/admin/adminAction'
 
 const index = ({ token }) => {
     const [showtasksForm, setShowTasksForm] = useState(false)
@@ -21,6 +22,7 @@ const index = ({ token }) => {
     const { projects, error: err, actionT: at, message: msg } = useSelector(state => state.projectReducer)
     const { employees, error: empErr, actionT: empAt, message: empMsg } = useSelector(state => state.adminEmployeeReducer)
     const { columns } = useSelector((state) => state.boardReducer)
+    const { admins } = useSelector((state) => state.adminReducer)
 
     const handleGetBoardColumns = () => {
         dispatch(getBoardColumns())
@@ -35,6 +37,7 @@ const index = ({ token }) => {
         dispatch(getAllProjects())
         dispatch(getAllEmployees())
         dispatch(getTasks())
+        dispatch(getAdmins())
     }, [dispatch])
 
     useEffect(() => {
@@ -59,7 +62,7 @@ const index = ({ token }) => {
                         }
                     </Box>
                     {!showtasksForm ?
-                        tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && projects && projects !== null && projects !== undefined && projects !== "" && projects.length > 0 && employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 && <TasksInsights userInfo={userInfo} isAdmin={false} tasks={tasks} projects={projects} employees={employees} handleGetBoardColumns={handleGetBoardColumns} columns={columns} /> : <AddNewTask setShowTasksForm={setShowTasksForm} userInfo={userInfo} isAdmin={false} handleGetBoardColumns={handleGetBoardColumns} />
+                        tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && projects && projects !== null && projects !== undefined && projects !== "" && projects.length > 0 && employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 && <TasksInsights userInfo={userInfo} isAdmin={false} tasks={tasks} projects={projects} employees={employees} handleGetBoardColumns={handleGetBoardColumns} columns={columns} admins={admins} /> : <AddNewTask setShowTasksForm={setShowTasksForm} userInfo={userInfo} isAdmin={false} handleGetBoardColumns={handleGetBoardColumns} />
                     }
                 </Box>
             </Box>

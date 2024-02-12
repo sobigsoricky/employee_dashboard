@@ -501,4 +501,10 @@ table td {
   -o-border-radius: 0;
   height: 100%;
   max-height: none;
+  overflow-y: auto;
+}
+
+.whistory {
+  height: 69vh;
+  overflow-y: auto;
 }

@@ -27,26 +27,12 @@ const AdminDetail = ({ handleProfileCreate }) => {
     designation: yup.string().required("Designation is required."),
     company: yup.string().required("Company is required."),
     email: yup.string().email("Invalid email.").required("Email is required."),
-    phone: yup
-      .string()
-      .matches(/^[0-9]{10}$/, "Invalid phone number.")
-      .required("Phone number is required."),
-    website: yup
-      .string()
-      .url("Invalid website URL.")
-      .required("Website URL is required."),
+    phone: yup.string().matches(/^[0-9]{10}$/, "Invalid phone number.").required("Phone number is required."),
+    website: yup.string().url("Invalid website URL.").required("Website URL is required."),
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-    watch,
-  } = useForm({
-    mode: "onBlur",
-    resolver: yupResolver(schema),
+  const { register, handleSubmit, reset, setValue, formState: { errors }, watch, } = useForm({
+    mode: "onBlur", resolver: yupResolver(schema),
     defaultValues: defaultFormValue,
   });
 
@@ -139,8 +125,8 @@ const AdminDetail = ({ handleProfileCreate }) => {
                         {...register("firstname")}
                       />
                       {errors &&
-                      errors.firstname &&
-                      errors.firstname.message ? (
+                        errors.firstname &&
+                        errors.firstname.message ? (
                         <Typography className="text-danger">
                           {errors.firstname.message}
                         </Typography>
@@ -181,8 +167,8 @@ const AdminDetail = ({ handleProfileCreate }) => {
                         {...register("designation")}
                       />
                       {errors &&
-                      errors.designation &&
-                      errors.designation.message ? (
+                        errors.designation &&
+                        errors.designation.message ? (
                         <Typography className="text-danger">
                           {errors.designation.message}
                         </Typography>

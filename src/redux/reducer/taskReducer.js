@@ -7,7 +7,8 @@ const initialState = {
     message: "",
     actionT: "",
     savedTask: null,
-    completedTask: null
+    completedTask: null,
+    deletedTask: null
 }
 
 export const taskReducer = (state = initialState, { type, payload }) => {
@@ -31,10 +32,10 @@ export const taskReducer = (state = initialState, { type, payload }) => {
             return { ...state, error: true, message: payload, actionT: "mark", completedTask: null }
 
         case actionTypes.DELETE_TASK_SUCCESS:
-            return { ...state, error: false, message: payload, actionT: "delete" }
+            return { ...state, error: false, message: payload.message, actionT: "delete-task", deletedTask: payload.deletedTask }
 
         case actionTypes.DELETE_TASK_FAILURE:
-            return { ...state, error: true, message: payload, actionT: "delete" }
+            return { ...state, error: true, message: payload, actionT: "delete-task" }
 
         case actionTypes.CLEAR_TASK_STATE:
             return { ...state, error: false, message: "", actionT: "", savedTask: null, completedTask: null }

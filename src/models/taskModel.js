@@ -1,4 +1,14 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+
+const subTaskSchema = new mongoose.Schema({
+    task: {
+        type: String
+    },
+    isCompleted: {
+        type: Boolean,
+        default: false
+    }
+});
 
 const taskSchema = new mongoose.Schema({
     taskName: {
@@ -11,7 +21,7 @@ const taskSchema = new mongoose.Schema({
     },
     priority: {
         type: String,
-        required: [true, "Provide task priorrity"],
+        required: [true, 'Provide task priority'],
     },
     assignedTo: [{
         type: String
@@ -28,11 +38,7 @@ const taskSchema = new mongoose.Schema({
     attachments: [{
         type: String,
     }],
-    subTask: [
-        {
-            type: String
-        }
-    ],
+    subTask: [subTaskSchema],
     createdBy: {
         type: String,
     },
@@ -48,4 +54,4 @@ const taskSchema = new mongoose.Schema({
 
 const Task = mongoose.models.tasks || mongoose.model('tasks', taskSchema);
 
-export default Task
+export default Task;

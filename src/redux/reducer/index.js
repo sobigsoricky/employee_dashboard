@@ -9,9 +9,10 @@ import { employeeAuthReducer } from "./employeeAuthReducer"
 import { userProfileReducer } from "./user/userProfileReducer"
 import { adminReducer } from "./admin/adminReducer"
 import { boardReducer } from "./admin/boardReducer"
+import { reportReducer } from "./user/reportReducer"
 
 const rootReducer = combineReducers({
-    authReducer, profileReducer, adminEmployeeReducer, teamReducer, projectReducer, taskReducer, employeeAuthReducer, userProfileReducer, adminReducer, boardReducer
+    authReducer, profileReducer, adminEmployeeReducer, teamReducer, projectReducer, taskReducer, employeeAuthReducer, userProfileReducer, adminReducer, boardReducer, reportReducer
 })
 
 export default rootReducer

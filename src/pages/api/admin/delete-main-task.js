@@ -2,10 +2,10 @@ import connectDB from "@/config/db";
 import Task from "@/models/taskModel";
 import Column from "@/models/kanbanListModal";
 
-await connectDB();
-
-export default async function handler(req, res) {
+async function handler(req, res) {
     try {
+        await connectDB();
+
         const { data } = JSON.parse(req.body);
         const { id, listId } = data;
 
@@ -33,12 +33,13 @@ export default async function handler(req, res) {
         isListExist.tasks.splice(taskIndex, 1);
         await isListExist.save();
 
-        const deletedTask = await Task.findOneAndDelete({ _id: id });
+        await Task.findOneAndDelete({ _id: id });
 
-        return res.status(200).json({ message: 'Task deleted successfully.', success: true, deletedTask });
+        return res.status(200).json({ message: 'Task deleted successfully.', success: true });
 
     } catch (error) {
         return res.status(500).json({ message: error.message, success: false });
     }
 }
 
+export default handler;

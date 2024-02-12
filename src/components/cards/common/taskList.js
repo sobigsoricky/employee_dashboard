@@ -5,7 +5,7 @@ import month from '@/data/month';
 import { TaskCard } from '@/components';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-const TaskList = ({ listName, total, employees, color, id, tasks, listTasks, isAdmin, userInfo, handleOpenTaskDetailModal }) => {
+const TaskList = ({ listName, total, employees, color, listId, tasks, listTasks, isAdmin, userInfo, handleOpenTaskDetailModal }) => {
 
     const formatDate = (d) => {
         return <>{`${d.split('T')[0].split("-")[2]} ${month[Number(d.split('T')[0].split("-")[1]) - 1]}, ${d.split('T')[0].split("-")[0]}`}</>;
@@ -46,7 +46,8 @@ const TaskList = ({ listName, total, employees, color, id, tasks, listTasks, isA
         );
     };
 
-    const getTask = (id, index) => {
+    const getTask = (id, index, listId) => {
+
         if (isAdmin) {
             const task = tasks.filter(entries => entries._id === id)[0]
             if (task) {
@@ -54,7 +55,7 @@ const TaskList = ({ listName, total, employees, color, id, tasks, listTasks, isA
                     <Draggable key={task?._id} draggableId={task?._id} index={index}>
                         {(provided) => (
                             <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                <TaskCard assignToBox={setAssignTo(task?.assignedTo, task)} taskName={task?.taskName} collaborator={setCollaborator(task?.collaborator)} handleOpenTaskDetailModal={handleOpenTaskDetailModal} task={task} />
+                                <TaskCard assignToBox={setAssignTo(task?.assignedTo, task)} taskName={task?.taskName} collaborator={setCollaborator(task?.collaborator)} handleOpenTaskDetailModal={handleOpenTaskDetailModal} task={task} listId={listId} />
                             </Box>
                         )}
                     </Draggable>
@@ -63,16 +64,16 @@ const TaskList = ({ listName, total, employees, color, id, tasks, listTasks, isA
         } else if (!isAdmin) {
             const task = tasks.filter(entries => entries._id === id)[0]
             if (task) {
-                const isAssignedTo = task.assignedTo.includes(userInfo._id);
-                const isCollaborator = task.collaborator.includes(userInfo._id);
-                const isCreator = task.createdBy === userInfo._id
+                const isAssignedTo = task.assignedTo.includes(userInfo?._id);
+                const isCollaborator = task.collaborator.includes(userInfo?._id);
+                const isCreator = task.createdBy === userInfo?._id
 
                 if (isAssignedTo || isCollaborator || isCreator) {
                     return (
                         <Draggable key={task?._id} draggableId={task?._id} index={index}>
                             {(provided) => (
                                 <Box ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                                    <TaskCard assignToBox={setAssignTo(task?.assignedTo, task)} taskName={task?.taskName} collaborator={setCollaborator(task?.collaborator)} />
+                                    <TaskCard handleOpenTaskDetailModal={handleOpenTaskDetailModal} assignToBox={setAssignTo(task?.assignedTo, task)} taskName={task?.taskName} collaborator={setCollaborator(task?.collaborator)} task={task} listId={listId} />
                                 </Box>
                             )}
                         </Draggable>
@@ -91,11 +92,11 @@ const TaskList = ({ listName, total, employees, color, id, tasks, listTasks, isA
                     <Typography variant='body1' sx={{ color: "#8A9096" }}>{total} Total</Typography>
                 </Box>
                 {
-                    tasks && tasks !== null && tasks !== "" && tasks.length > 0 && <Droppable droppableId={id.toString()} type='TASK' >
+                    tasks && tasks !== null && tasks !== "" && tasks.length > 0 && <Droppable droppableId={listId.toString()} type='TASK' >
                         {(provided) => (
                             <Box ref={provided.innerRef} {...provided.droppableProps} mt={2} className="list-task-container">
                                 {
-                                    listTasks && listTasks !== null && listTasks !== undefined && listTasks !== "" && listTasks.length > 0 && listTasks.map((task, index) => getTask(task, index))
+                                    listTasks && listTasks !== null && listTasks !== undefined && listTasks !== "" && listTasks.length > 0 && listTasks.map((task, index) => getTask(task, index, listId))
                                 }
                                 {provided.placeholder}
                             </Box>

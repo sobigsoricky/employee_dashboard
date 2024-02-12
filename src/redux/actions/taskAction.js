@@ -50,12 +50,12 @@ export const handleTaskMarkComplete = (t) => async (dispatch) => {
     }
 }
 
-export const handleTaskDeletion = (id) => async (dispatch) => {
+export const handleTaskDeletion = (data) => async (dispatch) => {
     try {
-        const response = await fetch('/api/delete-task', { method: 'POST', body: JSON.stringify({ id }) })
-        const { success, message } = await response.json()
+        const response = await fetch('/api/delete-task', { method: 'POST', body: JSON.stringify({ data }) })
+        const { success, message, deletedTask } = await response.json()
         if (success) {
-            dispatch({ type: actionTypes.DELETE_TASK_SUCCESS, payload: message })
+            dispatch({ type: actionTypes.DELETE_TASK_SUCCESS, payload: { message, deletedTask } })
         } else if (!success) {
             dispatch({ type: actionTypes.DELETE_TASK_FAILURE, payload: message })
         }

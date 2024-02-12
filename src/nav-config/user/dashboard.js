@@ -1,4 +1,4 @@
-const { Dashboard, Person, Folder, Assignment, AccountCircle, Settings, Group } = require("@mui/icons-material");
+const { Dashboard, Person, Folder, Assignment, AccountCircle, Settings, Group, Assessment } = require("@mui/icons-material");
 
 const EmpDashboardMenu = [
     { id: "dashboard-menu-1", path: "/user/dashboard", menu: 'Dashboard', icon: <Dashboard sx={{ color: "#F2F4F7" }} /> },
@@ -8,6 +8,7 @@ const EmpDashboardMenu = [
     // { id: "dashboard-menu-4", path: "/user/dashboard/user", menu: 'User', icon: <Person sx={{ color: "#F2F4F7" }} /> },
     // { id: "dashboard-menu-5", path: "/user/dashboard/Reporting", menu: 'Reporting', icon: <Settings sx={{ color: "#F2F4F7" }} /> },
     { id: "dashboard-menu-6", path: "/user/dashboard/profile", menu: 'Profile', icon: <AccountCircle sx={{ color: "#F2F4F7" }} /> },
+    { id: "dashboard-menu-8", path: "/user/dashboard/reporting", menu: 'Reporting', icon: <Assessment sx={{ color: "#F2F4F7" }} /> },
     // { id: "dashboard-menu-7", path: "/user/dashboard/setting", menu: 'Setting', icon: <Settings sx={{ color: "#F2F4F7" }} /> },
 ]
 

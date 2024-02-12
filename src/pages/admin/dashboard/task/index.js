@@ -11,6 +11,7 @@ import { getTasks } from "@/redux/actions/taskAction";
 import { getAllProjects } from '@/redux/actions/admin/project-action'
 import { getAllEmployees } from '@/redux/actions/admin/employee-action'
 import { getBoardColumns } from "@/redux/actions/admin/boardAction"
+import { getAdmins } from "@/redux/actions/admin/adminAction";
 
 const index = ({ token }) => {
   const [openCreateBoardModal, setOpenCreateBoardMoadal] = useState(false)
@@ -21,6 +22,7 @@ const index = ({ token }) => {
   const { projects, error: err, actionT: at, message: msg } = useSelector(state => state.projectReducer)
   const { employees, error: empErr, actionT: empAt, message: empMsg } = useSelector(state => state.adminEmployeeReducer)
   const { columns } = useSelector((state) => state.boardReducer)
+  const { admins } = useSelector((state) => state.adminReducer)
 
   const handleGetBoardColumns = () => {
     dispatch(getBoardColumns())
@@ -32,6 +34,7 @@ const index = ({ token }) => {
     dispatch(authenticateUser(token))
     dispatch(getTasks())
     dispatch(getBoardColumns())
+    dispatch(getAdmins())
   }, [dispatch])
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const index = ({ token }) => {
       toast.error(message)
     }
   }, [error, actionT])
+
 
 
   return (
@@ -56,7 +60,7 @@ const index = ({ token }) => {
             }
           </Box>
           {!showtasksForm ?
-            tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && projects && projects !== null && projects !== undefined && projects !== "" && projects.length > 0 && employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 && <TasksInsights isAdmin={true} userInfo={userInfo} tasks={tasks} projects={projects} employees={employees} setOpenCreateBoardMoadal={setOpenCreateBoardMoadal} openCreateBoardModal={openCreateBoardModal} columns={columns} handleGetBoardColumns={handleGetBoardColumns} /> : <AddNewTask userInfo={userInfo} isAdmin={true} setShowTasksForm={setShowTasksForm} handleGetBoardColumns={handleGetBoardColumns} />
+            tasks && tasks !== null && tasks !== undefined && tasks !== "" && tasks.length > 0 && projects && projects !== null && projects !== undefined && projects !== "" && projects.length > 0 && employees && employees !== null && employees !== undefined && employees !== "" && employees.length > 0 && <TasksInsights isAdmin={true} userInfo={userInfo} tasks={tasks} projects={projects} employees={employees} setOpenCreateBoardMoadal={setOpenCreateBoardMoadal} openCreateBoardModal={openCreateBoardModal} columns={columns} handleGetBoardColumns={handleGetBoardColumns} admins={admins} /> : <AddNewTask userInfo={userInfo} isAdmin={true} setShowTasksForm={setShowTasksForm} handleGetBoardColumns={handleGetBoardColumns} />
           }
         </Box>
       </Box>

@@ -10,6 +10,7 @@ export { default as CreateTask } from './forms/task/createNewTask'
 export { default as EmployeeLogin } from './forms/auth/employee/login'
 export { default as OTP } from './forms/auth/employee/otp'
 export { default as BoardColumn } from './forms/task/boardColumn'
+export { default as WorkUpdateForm } from './forms/reporting/work-update-form'
 
 // layout
 export { default as Layout } from './layout'
