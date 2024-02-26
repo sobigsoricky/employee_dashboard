@@ -46,10 +46,6 @@ const taskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    taskCurrentStatus: {
-        type: String,
-        default: 'todo'
-    }
 });
 
 const Task = mongoose.models.tasks || mongoose.model('tasks', taskSchema);

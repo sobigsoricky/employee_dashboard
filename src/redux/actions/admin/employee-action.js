@@ -1,12 +1,9 @@
 import actionTypes from "../actionTypes";
 
-export const createEmployeeProfile = (formData) => async (dispatch) => {
+export const createEmployeeProfile = (data) => async (dispatch) => {
     dispatch({ type: actionTypes.CLEAR_EMPLOYEE_STATE })
     try {
-        const response = await fetch('/api/admin/create-employee-profile', {
-            method: 'POST',
-            body: formData,
-        });
+        const response = await fetch('/api/admin/create-employee-profile', { method: 'POST', body: JSON.stringify({ data }), });
 
         const { message, success, createEmployee } = await response.json()
         if (success) {

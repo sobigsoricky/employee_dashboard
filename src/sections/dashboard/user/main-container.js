@@ -12,6 +12,8 @@ import { SendEmployeeCreationNotification, createEmployeeProfile } from "@/redux
 import { AdminEmployeesSection } from "@/sections";
 import { getAdmins } from "@/redux/actions/admin/adminAction";
 import { getTeams } from "@/redux/actions/admin/teamAction";
+import storage from '@/config/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const MainContainer = () => {
   const { message, error, actionT, createEmployee } = useSelector((state) => state.adminEmployeeReducer);
@@ -50,19 +52,20 @@ const MainContainer = () => {
     }
   };
 
-  const onSubmit = (data) => {
-    if (image && image !== null && image !== undefined && image !== "") {
-      const formData = new FormData();
-      formData.append("displayProfile", imageFile);
-      formData.append("firstName", data.firstName);
-      formData.append("lastName", data.lastName);
-      formData.append("designation", data.designation);
-      formData.append("email", data.email);
-      formData.append("phone", data.phone);
-      formData.append("isManager", data.isManager);
-      formData.append("teams", JSON.stringify(data.teams));
+  const onSubmit = async (data) => {
+    if (imageFile && imageFile !== null && imageFile !== undefined && imageFile !== "") {
 
-      dispatch(createEmployeeProfile(formData));
+      const storageRef = ref(storage, `display-profile/${Date.now()}-${imageFile.name}`)
+
+      try {
+        const snapshot = await uploadBytes(storageRef, imageFile);
+        const downloadUrl = await getDownloadURL(snapshot.ref);
+        const teamsString = JSON.stringify(data.teams)
+        const newData = { ...data, teams: teamsString, displayProfile: downloadUrl }
+        dispatch(createEmployeeProfile(newData));
+      } catch (error) {
+        console.error("Error uploading image to Firebase Storage:", error);
+      }
     } else {
       toast.error("Please select the image.");
     }

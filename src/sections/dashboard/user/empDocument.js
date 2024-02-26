@@ -13,8 +13,6 @@ const EmpDocument = ({ employee }) => {
         }
     }, [employee])
 
-    console.log(employee)
-
     return (
         <>
             <Box mt={4}>

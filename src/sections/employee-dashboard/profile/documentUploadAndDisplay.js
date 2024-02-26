@@ -5,6 +5,8 @@ import { uploadDocuments } from '@/redux/actions/user/profileAction';
 import { toast } from 'react-toastify';
 import { DocumentCard } from '@/components';
 import docTypes from '@/data/docTypes';
+import storage from '@/config/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const DocumentUploadAndDisplay = ({ user, fetchOnSuccess }) => {
     const dispatch = useDispatch();
@@ -21,16 +23,18 @@ const DocumentUploadAndDisplay = ({ user, fetchOnSuccess }) => {
         certification: null,
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('employeeId', user._id);
-        Object.keys(docs).forEach((key) => {
-            if (docs[key]) {
-                formData.append(key, docs[key]);
+
+        Object.keys(docs).map(async (item) => {
+            if (docs[item] && docs[item] !== null && docs[item] !== undefined && docs[item] !== "") {
+                const storageRef = ref(storage, `documents/${user?.firstName} ${user?.lastName}/${item}/${Date.now()}-${docs[item]?.name}`);
+                const snapshot = await uploadBytes(storageRef, docs[item]);
+                const downloadUrl = await getDownloadURL(snapshot.ref);
+                const newData = { employeeId: user?._id, [item]: downloadUrl }
+                dispatch(uploadDocuments(newData))
             }
-        });
-        dispatch(uploadDocuments(formData));
+        })
     };
 
     useEffect(() => {
@@ -76,7 +80,7 @@ const DocumentUploadAndDisplay = ({ user, fetchOnSuccess }) => {
                     <Box mt={3}>
                         <Grid container spacing={2}>
                             {
-                                user.documents !== null && user.documents !== undefined && user.documents !== "" && Object.keys(user.documents).length > 0 && Object.keys(user.documents).map(doc => user.documents[doc] !== null && <Grid item xs={12} sm={6}>
+                                user.documents !== null && user.documents !== undefined && user.documents !== "" && Object.keys(user.documents).length > 0 && Object.keys(user.documents).map(doc => user.documents[doc] !== null && <Grid item xs={12} sm={6} key={doc}>
                                     <DocumentCard title={docTypes[doc]} link={user.documents[doc]} />
                                 </Grid>)
                             }

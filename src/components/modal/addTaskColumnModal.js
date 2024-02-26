@@ -4,9 +4,6 @@ import { Circle, Close, Delete, MoreVert } from '@mui/icons-material'
 import BoardColumn from '../forms/task/boardColumn'
 
 const AddTaskColumnModal = ({ open, setOpenCreateBoardMoadal, handleGetBoardColumns, columns }) => {
-
-    console.log(columns)
-
     return (
         <>
             <Dialog open={open} fullWidth maxWidth="sm" id="modal">

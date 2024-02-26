@@ -1,109 +1,51 @@
-import multer from "multer";
-import { join, extname } from "path";
 import Employee from "@/models/employeeModel";
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, join(process.cwd(), "public", "documents", "upload"));
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const fileExtension = extname(file.originalname);
-        cb(
-            null,
-            `${file.originalname.split(".")[0]}-${uniqueSuffix}${fileExtension}`
-        );
-    },
-});
-
-const upload = multer({ storage });
-
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
 
 export default async function handler(req, res) {
     try {
-        await new Promise((resolve, reject) => {
-            upload.fields([
-                { name: "id", maxCount: 1 },
-                { name: "ssc", maxCount: 1 },
-                { name: "hsc", maxCount: 1 },
-                { name: "ug", maxCount: 1 },
-                { name: "pg", maxCount: 1 },
-                { name: "certification", maxCount: 1 },
-                { name: "payslips", maxCount: 100 },
-            ])(req, res, async (err) => {
-                if (err) {
-                    console.error("Error uploading files:", err);
-                    return reject({
-                        status: 400,
-                        message: "File upload failed",
-                        success: false,
-                    });
-                }
+        const { data } = JSON.parse(req.body)
 
-                resolve();
-            });
-        });
-
-        const employeeId = req.body.employeeId;
-        const existingEmployee = await Employee.findById(employeeId);
-
-        if (!existingEmployee) {
-            return res
-                .status(404)
-                .json({ message: "Employee not found", success: false });
+        if (!data) {
+            return res.status(400).json({ message: 'Invalid payload', success: false })
         }
 
-        // Update only the fields that have a new file in the request
+        const { employeeId } = data
+
+        const employeeExist = await Employee.findById(employeeId)
+
+        if (!employeeExist) {
+            return res.status(400).json({ message: 'User not found.', success: false })
+        }
+
         const updateFields = {};
 
-        if (req.files["id"]) {
-            updateFields.id = `/documents/upload/${req.files["id"][0].filename}`;
+        if (data?.id && data?.id !== null && data?.id !== undefined && data?.id !== "") {
+            updateFields.id = data?.id;
         }
 
-        if (req.files["ssc"]) {
-            updateFields.ssc = `/documents/upload/${req.files["ssc"][0].filename}`;
+        if (data?.ssc && data?.ssc !== null && data?.ssc !== undefined && data?.ssc !== "") {
+            updateFields.ssc = data?.ssc;
         }
 
-        if (req.files["hsc"]) {
-            updateFields.hsc = `/documents/upload/${req.files["hsc"][0].filename}`;
+        if (data?.hsc && data?.hsc !== null && data?.hsc !== undefined && data?.hsc !== "") {
+            updateFields.hsc = data?.hsc;
         }
 
-        if (req.files["ug"]) {
-            updateFields.ug = `/documents/upload/${req.files["ug"][0].filename}`;
+        if (data?.ug && data?.ug !== null && data?.ug !== undefined && data?.ug !== "") {
+            updateFields.ug = data?.ug;
         }
 
-        if (req.files["pg"]) {
-            updateFields.pg = `/documents/upload/${req.files["pg"][0].filename}`;
+        if (data?.pg && data?.pg !== null && data?.pg !== undefined && data?.pg !== "") {
+            updateFields.pg = data?.pg;
         }
 
-        if (req.files["certification"]) {
-            updateFields.certification = `/documents/upload/${req.files["certification"][0].filename}`;
-        }
+        Object.assign(employeeExist.documents, updateFields);
 
-        if (req.files["payslips"]) {
-            updateFields.payslips = req.files["payslips"].map(
-                (file) => `/documents/upload/${file.filename}`
-            );
-        }
+        await employeeExist.save();
 
-        Object.assign(existingEmployee.documents, updateFields);
+        res.status(200).json({ message: 'Documents uploaded and saved successfully', success: true })
 
-        await existingEmployee.save();
 
-        res
-            .status(200)
-            .json({
-                message: "Documents uploaded and saved successfully",
-                success: true,
-            });
     } catch (error) {
-        res
-            .status(error.status || 500)
-            .json({ message: error.message, success: false });
+        res.status(error.status || 500).json({ message: error.message, success: false });
     }
 }

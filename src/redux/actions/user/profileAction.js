@@ -16,9 +16,9 @@ export const getUserData = (id) => async (dispatch) => {
     }
 }
 
-export const uploadDocuments = (formData) => async (dispatch) => {
+export const uploadDocuments = (data) => async (dispatch) => {
     try {
-        const response = await fetch('/api/user/upload-document', { method: 'POST', body: formData })
+        const response = await fetch('/api/user/upload-document', { method: 'POST', body: JSON.stringify({ data }) })
         const { success, message } = await response.json()
         if (success) {
             dispatch({ type: actionTypes.UPLOAD_USER_DOCUEMENTS_SUCCESS, payload: message })

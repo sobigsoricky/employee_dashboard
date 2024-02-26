@@ -9,6 +9,8 @@ import { getAllEmployees } from '@/redux/actions/admin/employee-action';
 import { createTask, sendTaskNotification } from '@/redux/actions/taskAction';
 import { toast } from 'react-toastify'
 import { getAdmins } from '@/redux/actions/admin/adminAction';
+import storage from '@/config/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin, handleGetBoardColumns }) => {
     const { projects } = useSelector(state => state.projectReducer);
@@ -28,8 +30,6 @@ const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin,
         dispatch(getAdmins())
     }, [dispatch]);
 
-    console.log(employees, projects, 'iiii')
-
     const schema = yup.object().shape({
         taskName: yup.string().required('Task name is required.'),
         taskDueDate: yup.date().nullable(),
@@ -45,7 +45,6 @@ const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin,
     });
 
     const handlePriority = (priority) => {
-        console.log(priority);
         setActivePriority(priority);
         setValue('priority', priority)
         clearErrors('priority')
@@ -67,26 +66,25 @@ const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin,
     }
 
     const onSubmit = async (data) => {
-        const formData = new FormData();
-        formData.append('taskName', data?.taskName);
-        formData.append('taskDueDate', data?.taskDueDate);
-        // formData.append('taskStartTime', data?.taskStartTime);
-        // formData.append('taskEndTime', data?.taskEndTime);
-        formData.append('priority', data?.priority);
-        formData.append('assignedTo', JSON.stringify(data?.assignedTo));
-        formData.append('collaborator', JSON.stringify(data?.collaborator));
-        formData.append('project', data?.project || 'anynomous');
-        formData.append('description', data?.description);
-        formData.append('createdBy', userInfo?._id)
-        formData.append('taskCurrentStatus', taskCurrentStatus || 'todo')
+        const { taskName, taskDueDate, priority, assignedTo, collaborator, project, description, attachments } = data;
 
-        if (data?.attachments && data.attachments.length > 0) {
-            for (let i = 0; i < data.attachments.length; i++) {
-                formData.append('attachments', data.attachments[i]);
-            }
+        if (attachments && attachments !== null && attachments !== "" && attachments !== undefined && Object.entries(attachments).length > 0) {
+            const downloadUrls = await Promise.all(Object.keys(attachments).map(async (item) => {
+                const storageRef = ref(storage, `images/${Date.now()}-${item.name}`);
+                const snapshot = await uploadBytes(storageRef, attachments[item]);
+                return getDownloadURL(snapshot.ref);
+            }));
+
+            const attachmentsString = JSON.stringify(downloadUrls)
+            const newData = { taskName, taskDueDate, priority, assignedTo: JSON.stringify(assignedTo), collaborator: JSON.stringify(collaborator), project, description, createdBy: userInfo?._id, attachments: attachmentsString }
+            dispatch(createTask(newData));
+        } else {
+            const newData = { taskName, taskDueDate, priority, assignedTo: JSON.stringify(assignedTo), collaborator: JSON.stringify(collaborator), project, description, createdBy: userInfo?._id, }
+            dispatch(createTask(newData));
         }
-        dispatch(createTask(formData));
     };
+
+
 
     const handleTaskCreateNotification = (data) => {
         const filteredCollaborator = [
@@ -301,8 +299,6 @@ const CreateNewTask = ({ userInfo, taskCurrentStatus, setShowTasksForm, isAdmin,
                                                     type="file"
                                                     multiple
                                                     {...register('attachments')}
-                                                    onChange={(e) => {
-                                                    }}
                                                 />
                                             </Box>
                                         </Grid>

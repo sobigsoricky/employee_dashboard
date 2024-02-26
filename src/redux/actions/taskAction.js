@@ -14,10 +14,10 @@ export const getTasks = (id) => async (dispatch) => {
     }
 }
 
-export const createTask = (formData) => async (dispatch) => {
+export const createTask = (data) => async (dispatch) => {
     dispatch({ type: actionTypes.CLEAR_TASK_STATE })
     try {
-        const response = await fetch('/api/crate-task', { method: "POST", body: formData })
+        const response = await fetch('/api/crate-task', { method: "POST", body: JSON.stringify({ data }) })
         const { success, message, task } = await response.json()
         if (success) {
             dispatch({ type: actionTypes.CREATE_TASK_SUCCESS, payload: { message, task } })

@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Chip, Dialog, DialogContent, Typography, IconButton, Button } from '@mui/material'
+import Link from 'next/link'
+import { Box, Chip, Dialog, DialogContent, Typography, IconButton, Button, Grid } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import month from '@/data/month'
 
@@ -111,6 +112,22 @@ const TaskDetailModal = ({ open, task, handleCloseTaskDetailModal, handleTaskDel
                                     <Typography variant='h3' className='fw-semibold' gutterBottom>Descriptions</Typography>
                                     <Typography>{task?.description}</Typography>
                                 </Box>
+                                {
+                                    task?.attachments && <Box mt={5}>
+                                        <Typography variant='h3' className='fw-semibold' gutterBottom>Attachments</Typography>
+                                        <Box mt={2}>
+                                            <Grid container spacing={2}>
+                                                {
+                                                    task?.attachments.map(item => <Grid item xs={12} sm={6} md={4}>
+                                                        <Link href={item}>
+                                                            <img src={item} className='img-fluid' />
+                                                        </Link>
+                                                    </Grid>)
+                                                }
+                                            </Grid>
+                                        </Box>
+                                    </Box>
+                                }
                             </Box>
                         </Box>
                     }

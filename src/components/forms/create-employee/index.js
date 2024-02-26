@@ -1,16 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  FormControlLabel,
-  Switch
-} from "@mui/material";
+import { Box, Button, Grid, TextField, Typography, Select, MenuItem, FormControl, InputLabel, FormControlLabel, Switch } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -19,14 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { getTeams } from "@/redux/actions/admin/teamAction";
 
 const CreateEmployee = ({ formMethods }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-    watch,
-  } = formMethods;
+  const { register, handleSubmit, reset, setValue, formState: { errors }, watch, } = formMethods;
 
   const dispatch = useDispatch();
   const { teams } = useSelector((state) => state.teamReducer);

@@ -1,49 +1,27 @@
-import multer from 'multer';
-import path from 'path';
+import connectDB from '@/config/db';
 import Task from '@/models/taskModel';
 import Column from '@/models/kanbanListModal';
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(process.cwd(), 'public', 'images', 'upload'));
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const fileExtension = path.extname(file.originalname);
-        cb(null, `${file.originalname.split('.')[0]}-${uniqueSuffix}${fileExtension}`);
-    },
-});
-
-const upload = multer({ storage });
-
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+await connectDB()
 
 export default async function handler(req, res) {
     try {
-        await new Promise((resolve, reject) => {
-            upload.array('attachments')(req, res, async (err) => {
-                if (err) {
-                    console.error('Error uploading files:', err);
-                    return reject({
-                        status: 400,
-                        message: 'File upload failed',
-                        success: false,
-                    });
-                }
-                resolve();
-            });
-        });
+        const { data } = JSON.parse(req.body)
 
+        if (!data) {
+            return res.status(400).json({ message: 'Invalid payload 1', success: false })
+        }
 
+        const { assignedTo, priority, taskDueDate, taskName, description, project, collaborator, createdBy, attachments } = data;
 
-        const { assignedTo, priority, taskDueDate, taskName, description, project, collaborator, createdBy, taskCurrentStatus } = req.body;
+        if (!assignedTo || !priority || !taskDueDate || !taskName || !description || !project || !collaborator || !createdBy) {
+            console.log(assignedTo, priority, taskDueDate, taskName, description, project, collaborator, createdBy)
+            return res.status(400).json({ message: 'Invalid payload 2', success: false })
+        }
 
         const parsedAssignedTo = JSON.parse(assignedTo);
         const parsedCollaborator = JSON.parse(collaborator);
+        const parsedAttachments = attachments && JSON.parse(attachments) || null
 
         const newTask = new Task({
             assignedTo: parsedAssignedTo,
@@ -51,11 +29,10 @@ export default async function handler(req, res) {
             taskDueDate,
             taskName,
             description,
-            attachments: req.files.map((file) => `/images/upload/${file.filename}`),
+            attachments: parsedAttachments,
             project,
             collaborator: parsedCollaborator,
             createdBy,
-            taskCurrentStatus
         });
 
         const savedTask = await newTask.save();
