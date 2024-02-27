@@ -42,7 +42,7 @@ const Auth = ({ token }) => {
     useEffect(() => {
         if (!error && actionT === "login") {
             toast.success(message)
-            router.push('/admin/dashboard/profile')
+            router.push('/admin/dashboard')
         } else if (error && actionT === "login") {
             toast.error(message)
         }

@@ -27,3 +27,17 @@ export const getTeams = () => async (dispatch) => {
         dispatch({ type: actionTypes.GET_TEAMS_FAILURE, payload: error.message })
     }
 }
+
+export const getTeam = (id) => async (dispatch) => {
+    try {
+        const response = await fetch('/api/admin/get-team', { method: 'POST', body: JSON.stringify({ id }) })
+        const { success, team, message } = await response.json()
+        if (success) {
+            dispatch({ type: actionTypes.GET_TEAM_SUCCESS, payload: { team, message } })
+        } else if (!success) {
+            dispatch({ type: actionTypes.GET_TEAM_FAILURE, payload: message })
+        }
+    } catch (error) {
+        dispatch({ type: actionTypes.GET_TEAM_FAILURE, payload: error })
+    }
+}

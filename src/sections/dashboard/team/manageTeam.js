@@ -60,7 +60,7 @@ const ManageTeam = ({ setAddNewTeam }) => {
                         </Grid>
                         {
                             teams && teams !== null && teams !== undefined && teams !== "" && teams.length > 0 && teams.map(item => <Grid item xs={12} sm={4}>
-                                <Card className='TeamCard' component={Paper} onClick={() => router.push('/admin/dashboard/team/')} sx={{ height: "100%" }}>
+                                <Card className='TeamCard' component={Paper} onClick={() => router.push(`/admin/dashboard/team/${item?._id}`)} sx={{ height: "100%" }}>
                                     <CardContent className='d-flex flex-column align-items-center p-0'>
                                         <Typography variant='h3' align='center' className='fw-semibold mb-3'>{item.teamName}</Typography>
                                         <Box sx={{ height: "5.5rem" }} className="d-flex align-items-center">

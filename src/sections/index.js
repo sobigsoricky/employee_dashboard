@@ -18,6 +18,7 @@ export { default as EmpDocument } from './dashboard/user/empDocument'
 // dashboard/team
 export { default as ManageTeam } from './dashboard/team/manageTeam'
 export { default as AddTeam } from './dashboard/team/addTeam'
+export { default as TeamDetails } from './dashboard/team/teamDetails'
 
 // dashboard/project
 export { default as AddNewProject } from './dashboard/projects/addNewProject'

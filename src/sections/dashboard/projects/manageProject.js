@@ -42,7 +42,7 @@ const ManageProject = ({ setAddNewProject, isAdmin, userInfo }) => {
       const filteredProjects = projects.filter(project => {
         return project.assignedTeam.some(team => userInfo.teams.includes(team));
       });
-
+      console.log(filteredProjects)
       setFilteredProjects(filteredProjects);
     }
   }, [isAdmin])

@@ -29,7 +29,7 @@ const Otp = () => {
     useEffect(() => {
         if (actionT == "otp-v" && !error) {
             toast.success(message)
-            router.push('/user/dashboard')
+            router.push('/user/dashboard/task/')
         } else if (actionT == "otp-v" && error) {
             toast.error(message)
         }

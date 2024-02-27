@@ -23,6 +23,12 @@ export const teamReducer = (state = initialState, { type, payload }) => {
         case actionTypes.GET_TEAMS_FAILURE:
             return { ...state, message: payload, error: true, actionT: 'fetch' }
 
+        case actionTypes.GET_TEAM_SUCCESS:
+            return { ...state, message: payload.message, team: payload.team, error: false, actionT: 'fetch-team' }
+
+        case actionTypes.GET_TEAM_FAILURE:
+            return { ...state, message: payload, team: null, error: true, actionT: 'fetch-team' }
+
         default:
             return state
     }

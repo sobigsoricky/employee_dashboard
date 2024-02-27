@@ -24,9 +24,7 @@ const index = ({ token }) => {
             <Layout isAdmin={false} userInfo={userInfo} />
             <Box className="dashboard-main" id="projectMain">
                 <Box className="dashboard-main-container" p={{ xs: 2, sm: 4 }}>
-                    {
-                        addNewProject ? <AddNewProject setAddNewProject={setAddNewProject} /> : <ManageProject userInfo={userInfo} setAddNewProject={setAddNewProject} isAdmin={false} />
-                    }
+                    <ManageProject userInfo={userInfo} setAddNewProject={setAddNewProject} isAdmin={false} />
                 </Box>
             </Box>
         </>

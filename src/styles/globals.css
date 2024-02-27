@@ -508,3 +508,50 @@ table td {
   height: 69vh;
   overflow-y: auto;
 }
+
+#homeBanner {
+  height: 92vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#homeBanner h2 {
+  font-size: 2rem !important;
+  font-weight: 500;
+  color: rgba(61, 71, 77, 0.5);
+  margin-bottom: 1rem;
+}
+
+#homeBanner h1 {
+  font-size: 3.75rem !important;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+#homeBanner p {
+  font-size: 1.2rem !important;
+  color: rgba(61, 71, 77, 0.5);
+  margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+  #homeBanner {
+    height: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  #homeBanner h1 {
+    font-size: 2rem !important;
+  }
+
+  #homeBanner h2 {
+    font-size: 1.5rem !important;
+  }
+
+  #homeBanner p {
+    font-size: 1rem !important;
+  }
+}
