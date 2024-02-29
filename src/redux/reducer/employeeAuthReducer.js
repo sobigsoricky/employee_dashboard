@@ -29,10 +29,10 @@ export const employeeAuthReducer = (state = initialState, { type, payload }) => 
             return { ...state, error: true, userInfo: null, message: payload, actionT: "auth" }
 
         case actionTypes.LOGOUT_EMPLOYEE_USER_SUCCESS:
-            return { ...state, error: false, message: "Logout successful" }
+            return { ...state, error: false, message: "Logout successful", actionT: "logout" }
 
         case actionTypes.LOGOUT_EMPLOYEE_USER_FAILURE:
-            return { ...state, error: true, message: "Logout failed" }
+            return { ...state, error: true, message: "Logout failed", actionT: "logout" }
 
         default:
             return state

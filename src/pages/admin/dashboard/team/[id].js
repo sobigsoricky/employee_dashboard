@@ -1,26 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { Layout } from "@/components";
 import { Head, TeamDetails } from "@/sections";
 import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { parse } from "cookie";
 import { authenticateUser } from "@/redux/actions/authAction";
-import authMiddleware from "@/middleware";
 import { getTeam } from '@/redux/actions/admin/teamAction';
 import { getAllEmployees } from '@/redux/actions/admin/employee-action';
 
-const SingleTeam = ({ token }) => {
+const SingleTeam = () => {
     const router = useRouter()
     const dispatch = useDispatch();
-    const { userInfo } = useSelector(state => state.authReducer)
+    const { userInfo, error, message, actionT } = useSelector(state => state.authReducer);
     const { team } = useSelector((state) => state.teamReducer)
     const { employees } = useSelector((state) => state.adminEmployeeReducer)
     const { id } = router.query
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+        dispatch(authenticateUser())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
+        }
+    }, [error, actionT])
 
     useEffect(() => {
         if (id !== null && id !== undefined && id !== "") {
@@ -41,18 +45,5 @@ const SingleTeam = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default SingleTeam

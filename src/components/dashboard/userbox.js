@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { Logout } from '@mui/icons-material'
 import { Avatar, Box, Grid, IconButton, Typography } from '@mui/material'
@@ -6,8 +7,9 @@ import { logoutAdmin, logoutEmployeeUser } from '@/redux/actions/authAction'
 import { toast } from 'react-toastify'
 
 const UserBox = ({ isAdmin }) => {
-    const { userInfo, error, message } = useSelector(state => isAdmin ? state.authReducer : state.employeeAuthReducer)
+    const { userInfo, error, message, actionT } = useSelector(state => isAdmin ? state.authReducer : state.employeeAuthReducer)
     const dispatch = useDispatch()
+    const router = useRouter()
 
     function stringToColor(string) {
         let hash = 0;
@@ -36,13 +38,6 @@ const UserBox = ({ isAdmin }) => {
         };
     }
 
-    const handleLogoutAdmin = () => {
-        if (isAdmin) {
-            dispatch(logoutAdmin())
-        } else if (!isAdmin) {
-            dispatch(logoutEmployeeUser())
-        }
-    }
 
     useEffect(() => {
         if (!userInfo && error && isAdmin) {
@@ -53,6 +48,20 @@ const UserBox = ({ isAdmin }) => {
             dispatch(logoutEmployeeUser())
         }
     }, [userInfo, error, isAdmin])
+
+    useEffect(() => {
+        if (!error && message === 'logout successful' && isAdmin) {
+            toast.success('Logged out successfully.');
+            router.push('/admin/auth');
+        } else if (error && message === 'logout failed' && isAdmin) {
+            toast.error('Something went wrong.');
+        } else if (!error && actionT === "logout" && !isAdmin) {
+            toast.success('Logged out successfully.');
+            router.push('/user/auth');
+        } else if (error && actionT === "logout" && !isAdmin) {
+            toast.error('Something went wrong.');
+        }
+    }, [error, message]);
 
     return (
         <>
@@ -75,7 +84,7 @@ const UserBox = ({ isAdmin }) => {
                     </Grid>
                     <Grid item xs={2}>
                         <Box className="side-panel-logout">
-                            <IconButton onClick={handleLogoutAdmin} sx={{ height: 24, width: 24 }}><Logout className='text-white' /></IconButton>
+                            <IconButton onClick={() => isAdmin ? dispatch(logoutAdmin()) : dispatch(logoutEmployeeUser())} sx={{ height: 24, width: 24 }}><Logout className='text-white' /></IconButton>
                         </Box>
                     </Grid>
                 </Grid>

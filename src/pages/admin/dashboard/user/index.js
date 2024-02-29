@@ -1,19 +1,23 @@
+import React, { useEffect } from 'react'
 import { Layout } from '@/components'
 import { Head, UserMainContainer } from '@/sections'
-import { Box, Grid } from '@mui/material'
-import React, { useEffect } from 'react'
+import { Box } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { parse } from 'cookie'
-import { authenticateUser, logoutAdmin } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
+import { authenticateUser, logoutAdmin } from '@/redux/actions/authAction';
 
-const index = ({ token }) => {
+const index = () => {
     const dispatch = useDispatch()
-    const { userInfo } = useSelector(state => state.authReducer)
+    const { userInfo, error, message, actionT } = useSelector(state => state.authReducer);
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+        dispatch(authenticateUser())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -27,19 +31,5 @@ const index = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
-
 
 export default index

@@ -60,10 +60,10 @@ export const forgotPassword = (data) => async (dispatch) => {
     }
 }
 
-export const authenticateUser = (token) => async (dispatch) => {
+export const authenticateUser = () => async (dispatch) => {
     dispatch({ type: actionTypes.CLEAR_STATE })
     try {
-        const response = await fetch('/api/admin/get-token-data', { method: 'POST', body: JSON.stringify({ token }) });
+        const response = await fetch('/api/admin/get-token-data');
         const { success, user, message } = await response.json()
         if (success && user !== null && user !== undefined && user !== "") {
             dispatch({ type: actionTypes.GET_DATA_FROM_TOKEN_SUCCESS, payload: { user, message } })
@@ -90,7 +90,6 @@ export const handleUserLogin = (data) => async (dispatch) => {
 }
 
 export const handleVerifyAndLogin = (data) => async (dispatch) => {
-    console.log(data)
     try {
         const response = await fetch('/api/user/verify-otp', { method: "POST", body: JSON.stringify({ data }) })
         const { success, user, message } = await response.json()
@@ -106,10 +105,10 @@ export const handleVerifyAndLogin = (data) => async (dispatch) => {
     }
 }
 
-export const authenticateEmployee = (token) => async (dispatch) => {
+export const authenticateEmployee = () => async (dispatch) => {
     dispatch({ type: actionTypes.CLEAR_STATE })
     try {
-        const response = await fetch('/api/user/get-token-data', { method: 'POST', body: JSON.stringify({ token }) });
+        const response = await fetch('/api/user/get-token-data');
         const { success, user, message } = await response.json()
         if (success && user !== null && user !== undefined && user !== "") {
             dispatch({ type: actionTypes.GET_DATA_FROM_TOKEN_SUCCESS, payload: { user, message } })
@@ -124,7 +123,7 @@ export const authenticateEmployee = (token) => async (dispatch) => {
 export const logoutEmployeeUser = () => async (dispatch) => {
     dispatch({ type: actionTypes.CLEAR_STATE })
     try {
-        const response = await fetch('/api/user/logout', { method: 'GET' })
+        const response = await fetch('/api/user/logout')
         const { success } = await response.json()
         if (success) {
             dispatch({ type: actionTypes.LOGOUT_EMPLOYEE_USER_SUCCESS })

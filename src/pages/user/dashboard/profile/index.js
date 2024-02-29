@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Box, Typography } from '@mui/material'
 import { Layout } from '@/components'
-import { parse } from 'cookie'
 import { authenticateEmployee } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
 import { useDispatch, useSelector } from 'react-redux'
 import { DetailProfile, DocumentUploadAndDisplay, Head } from '@/sections'
 import { getUserData } from '@/redux/actions/user/profileAction'
 import { toast } from 'react-toastify'
 
-const Profile = ({ token }) => {
+const Profile = () => {
     const [selectedTab, setSelectedTab] = useState(1)
     const { userInfo, error, message } = useSelector(state => state.employeeAuthReducer)
     const { user, actionT, error: err, message: msg } = useSelector(state => state.userProfileReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token))
-    }, [token])
+        dispatch(authenticateEmployee())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutEmployeeUser())
+            router.push('/user/auth/')
+        }
+    }, [error, actionT])
 
     useEffect(() => {
         if (userInfo && userInfo !== null && userInfo !== undefined && userInfo !== "" && Object.keys(userInfo).length > 0) {
@@ -61,18 +66,5 @@ const Profile = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['employeetoken'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default Profile

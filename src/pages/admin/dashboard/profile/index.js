@@ -1,26 +1,25 @@
 "use client"
 
 import React, { useEffect } from 'react'
-import { parse } from 'cookie'
+import { useRouter } from 'next/router'
 import { Box, Container, Grid } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { AdminDetail } from '@/components'
 import { Head, Header } from '@/sections'
 import { authenticateUser } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
 import { createProfile } from '@/redux/actions/admin/profile-action'
 import { toast } from 'react-toastify'
 
-const Profile = ({ token }) => {
+const Profile = () => {
+    const router = useRouter()
     const { error, message, actionT } = useSelector(state => state.profileReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+        dispatch(authenticateUser())
+    }, [dispatch])
 
     const handleProfileCreate = (data) => {
-        console.log(data)
         dispatch(createProfile(data))
     }
 
@@ -32,6 +31,13 @@ const Profile = ({ token }) => {
             toast.error(message)
         }
     }, [error, message])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
+            router.push('/admin/auth/')
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -60,18 +66,5 @@ const Profile = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default Profile

@@ -4,14 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Box, Container, Grid, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { parse } from 'cookie'
-import authMiddleware from '@/middleware'
 import { Head, Header } from '@/sections'
 import { ForgotPassword, LoginForm, RegisterForm } from '@/components'
 import { createAdmin, loginAdmin, forgotPassword, authenticateUser } from '@/redux/actions/authAction'
 import { toast } from 'react-toastify'
 
-const Auth = ({ token }) => {
+const Auth = () => {
     const { userInfo, error, message, actionT } = useSelector(state => state.authReducer)
     const [selectedForm, setselectedForm] = useState('reg')
     const dispatch = useDispatch()
@@ -32,7 +30,6 @@ const Auth = ({ token }) => {
     useEffect(() => {
         if (actionT === "create" && !error) {
             toast.success(message)
-            // setselectedForm('login')
             router.push('/admin/auth/otp/')
         } else if (error && actionT === "create") {
             toast.error(message)
@@ -58,8 +55,14 @@ const Auth = ({ token }) => {
     }, [message, error, actionT])
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+        dispatch(authenticateUser())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (!error && actionT === "auth") {
+            router.push('/admin/dashboard/')
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -92,18 +95,5 @@ const Auth = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default Auth

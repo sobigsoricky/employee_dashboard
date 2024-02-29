@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout } from "@/components";
 import { authenticateUser } from "@/redux/actions/authAction";
-import authMiddleware from "@/middleware";
-import { parse } from "cookie";
 import { toast } from 'react-toastify'
 import { AddNewTask, TasksInsights } from "@/sections";
 import { getTasks } from "@/redux/actions/taskAction";
@@ -13,11 +11,11 @@ import { getAllEmployees } from '@/redux/actions/admin/employee-action'
 import { getBoardColumns } from "@/redux/actions/admin/boardAction"
 import { getAdmins } from "@/redux/actions/admin/adminAction";
 
-const index = ({ token }) => {
+const index = () => {
   const [openCreateBoardModal, setOpenCreateBoardMoadal] = useState(false)
   const [showtasksForm, setShowTasksForm] = useState(false)
   const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.authReducer);
+  const { userInfo, error: uERR, message: uMsg, actionT: uAct } = useSelector(state => state.authReducer);
   const { error, tasks, message, actionT } = useSelector(state => state.taskReducer)
   const { projects, error: err, actionT: at, message: msg } = useSelector(state => state.projectReducer)
   const { employees, error: empErr, actionT: empAt, message: empMsg } = useSelector(state => state.adminEmployeeReducer)
@@ -31,7 +29,7 @@ const index = ({ token }) => {
   useEffect(() => {
     dispatch(getAllProjects())
     dispatch(getAllEmployees())
-    dispatch(authenticateUser(token))
+    dispatch(authenticateUser())
     dispatch(getTasks())
     dispatch(getBoardColumns())
     dispatch(getAdmins())
@@ -44,7 +42,11 @@ const index = ({ token }) => {
     }
   }, [error, actionT])
 
-
+  useEffect(() => {
+    if (uERR && uAct === "auth") {
+      dispatch(logoutAdmin())
+    }
+  }, [uERR, uAct])
 
   return (
     <>
@@ -67,18 +69,5 @@ const index = ({ token }) => {
     </>
   );
 };
-
-export const getServerSideProps = authMiddleware(async (context) => {
-  const { req } = context;
-
-  const cookies = parse(req.headers.cookie || '');
-  const token = cookies['token'] || null
-
-  return {
-    props: {
-      token
-    }
-  };
-});
 
 export default index;

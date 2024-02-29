@@ -1,18 +1,25 @@
 import React, { useEffect } from 'react'
-import { Head, Header } from '@/sections'
+import { useRouter } from 'next/router'
+import { Head } from '@/sections'
 import { useDispatch, useSelector } from 'react-redux'
-import { parse } from 'cookie'
-import { authenticateEmployee } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
+import { authenticateEmployee, logoutEmployeeUser } from '@/redux/actions/authAction'
 import { Layout } from '@/components'
 
-const index = ({ token }) => {
+const index = () => {
+    const router = useRouter()
     const dispatch = useDispatch()
-    const { userInfo, error, message } = useSelector(state => state.employeeAuthReducer)
+    const { userInfo, error, message, actionT } = useSelector(state => state.employeeAuthReducer)
 
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token))
-    }, [token])
+        dispatch(authenticateEmployee())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutEmployeeUser())
+            router.push('/user/auth/')
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -21,18 +28,5 @@ const index = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['employeetoken'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default index

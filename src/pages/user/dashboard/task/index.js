@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import { Head, MyTask } from '@/sections'
 import { Layout } from '@/components'
-import { parse } from 'cookie'
 import { authenticateEmployee } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
 import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { AddNewTask, TasksInsights } from "@/sections";
@@ -14,9 +12,9 @@ import { getAllEmployees } from '@/redux/actions/admin/employee-action'
 import { getBoardColumns } from "@/redux/actions/admin/boardAction"
 import { getAdmins } from '@/redux/actions/admin/adminAction'
 
-const index = ({ token }) => {
+const index = () => {
     const [showtasksForm, setShowTasksForm] = useState(false)
-    const { userInfo } = useSelector(state => state.employeeAuthReducer)
+    const { userInfo, error: uERR, message: uMsg, actionT: uAct } = useSelector(state => state.employeeAuthReducer)
     const dispatch = useDispatch()
     const { error, tasks, message, actionT } = useSelector(state => state.taskReducer)
     const { projects, error: err, actionT: at, message: msg } = useSelector(state => state.projectReducer)
@@ -29,10 +27,7 @@ const index = ({ token }) => {
     }
 
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token))
-    }, [token])
-
-    useEffect(() => {
+        dispatch(authenticateEmployee())
         dispatch(getBoardColumns())
         dispatch(getAllProjects())
         dispatch(getAllEmployees())
@@ -44,6 +39,13 @@ const index = ({ token }) => {
         if (!error && actionT === "fetch-tasks") {
         } else if (error && actionT === "fetch-tasks") {
             toast.error(message)
+        }
+    }, [error, actionT])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutEmployeeUser())
+            router.push('/user/auth/')
         }
     }, [error, actionT])
 
@@ -69,18 +71,5 @@ const index = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['employeetoken'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default index

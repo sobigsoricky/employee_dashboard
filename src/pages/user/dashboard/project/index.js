@@ -8,15 +8,22 @@ import { authenticateEmployee } from '@/redux/actions/authAction'
 import authMiddleware from '@/middleware'
 import { useRouter } from 'next/router'
 
-const index = ({ token }) => {
+const index = () => {
     const [addNewProject, setAddNewProject] = useState(false);
     const dispatch = useDispatch()
-    const { userInfo } = useSelector(state => state.employeeAuthReducer)
-    const route = useRouter();
+    const { userInfo, error, message, actionT } = useSelector(state => state.employeeAuthReducer)
+    const router = useRouter();
 
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token))
-    }, [token])
+        dispatch(authenticateEmployee())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutEmployeeUser())
+            router.push('/user/auth/')
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -30,18 +37,5 @@ const index = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['employeetoken'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default index

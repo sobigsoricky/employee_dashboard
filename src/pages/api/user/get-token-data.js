@@ -1,16 +1,27 @@
 import connectDB from "@/config/db";
 import jwt from "jsonwebtoken";
-import Employee from "@/models/employeeModel";
+import Employee from "@/models/employeeModel"
+import { parse } from 'cookie'
 
 connectDB();
 
 export default async function handler(req, res) {
-  const { token } = JSON.parse(req.body);
-
   try {
+    const cookies = parse(req.headers.cookie || '');
+
+    if (!cookies) {
+      return res.status(400).json({ success: false, message: "Failed to authenticate user.", user: null })
+    }
+
+    const token = cookies['employeetoken'] || null
+
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Failed to authenticate user.", user: null })
+    }
+
     const decodedToken = jwt.verify(token, "employeedashboardjwttoken");
 
-    const user = await Employee.findOne({ email: decodedToken.email }).select("-password");
+    const user = await Employee.findById(decodedToken?.id).select("-password");
 
     if (!user) {
       res.status(400).json({ success: false, message: "Failed to authenticate user.", user: null, });

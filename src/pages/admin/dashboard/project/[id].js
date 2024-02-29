@@ -3,17 +3,21 @@ import { Layout } from "@/components";
 import { Head, ProjectDetails } from "@/sections";
 import { Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { parse } from "cookie";
 import { authenticateUser } from "@/redux/actions/authAction";
-import authMiddleware from "@/middleware";
 
-const SingleProject = ({ token }) => {
+const SingleProject = () => {
     const dispatch = useDispatch();
-    const { userInfo } = useSelector(state => state.authReducer)
-    useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+    const { userInfo, error, message, actionT } = useSelector(state => state.authReducer);
 
+    useEffect(() => {
+        dispatch(authenticateUser())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -29,16 +33,3 @@ const SingleProject = ({ token }) => {
 }
 
 export default SingleProject
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});

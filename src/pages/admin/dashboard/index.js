@@ -2,49 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, Paper } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { parse } from 'cookie';
 import { authenticateUser, logoutAdmin } from '@/redux/actions/authAction';
-import authMiddleware from '@/middleware';
-import { toast } from 'react-toastify';
 import { Head } from '@/sections';
 import { Layout } from '@/components';
 import { getAllProjects } from '@/redux/actions/admin/project-action';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import { getTasks } from '@/redux/actions/taskAction';
 import { RadialBarChart, RadialBar, ResponsiveContainer } from 'recharts';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, } from 'recharts';
 
 
-const AdminDashboard = ({ token }) => {
-    const { userInfo, error, message } = useSelector(state => state.authReducer);
+const AdminDashboard = () => {
+    const { userInfo, error, message, actionT } = useSelector(state => state.authReducer);
     const { projects } = useSelector(state => state.projectReducer);
     const { tasks } = useSelector(state => state.taskReducer);
     const dispatch = useDispatch();
-    const router = useRouter();
-
-    const handleLogoutAdminUser = () => {
-        dispatch(logoutAdmin());
-    };
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token));
-    }, [token]);
-
-    useEffect(() => {
-        if (!error && message === 'logout successful') {
-            toast.success('Logged out successfully.');
-            router.push('/admin/auth');
-        } else if (error && message === 'logout failed') {
-            toast.error('Something went wrong.');
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
         }
-    }, [error, message]);
+    }, [error, actionT])
 
     useEffect(() => {
+        dispatch(authenticateUser());
         dispatch(getAllProjects());
         dispatch(getTasks());
     }, [dispatch]);
-
-    console.log(tasks);
 
     const [taskData, setTaskData] = useState([
         { name: 'Low', task: 0, fill: '#198754' },
@@ -185,18 +168,5 @@ const AdminDashboard = ({ token }) => {
         </>
     );
 };
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null;
-
-    return {
-        props: {
-            token,
-        },
-    };
-});
 
 export default AdminDashboard;

@@ -10,18 +10,24 @@ import { Box, Button, Typography } from '@mui/material'
 import { getEmployeeDetail } from '@/redux/actions/admin/employee-action'
 import { toast } from 'react-toastify'
 
-const SingleEmployee = ({ token }) => {
+const SingleEmployee = () => {
     const [selectedTab, setSelectedTab] = useState(1)
     const dispatch = useDispatch()
     const router = useRouter()
-    const { userInfo } = useSelector(state => state.authReducer)
+    const { userInfo, error: uErr, message: umsg, actionT: uact } = useSelector(state => state.authReducer);
     const { employee, message, error, actionT } = useSelector(state => state.adminEmployeeReducer)
 
     const { id } = router.query
 
     useEffect(() => {
-        if (token) dispatch(authenticateUser(token))
-    }, [token])
+        dispatch(authenticateUser())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutAdmin())
+        }
+    }, [error, actionT])
 
     useEffect(() => {
         if (id) dispatch(getEmployeeDetail(id))
@@ -29,7 +35,7 @@ const SingleEmployee = ({ token }) => {
 
     useEffect(() => {
         if (id && error && actionT === "fetchEmp") {
-            toast.error('hi')
+            toast.error(message)
         }
     }, [error, actionT, id])
 
@@ -54,18 +60,5 @@ const SingleEmployee = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['token'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
 
 export default SingleEmployee

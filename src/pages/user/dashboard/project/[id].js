@@ -3,21 +3,23 @@ import { Head, ProjectDetails } from "@/sections";
 import { Box } from "@mui/material";
 import { React, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { parse } from "cookie";
 import { authenticateEmployee } from "@/redux/actions/authAction";
-import authMiddleware from "@/middleware";
 
 
-export default function singleProject({ token }) {
-
+export default function singleProject() {
   const dispatch = useDispatch();
-
-  const { userInfo } = useSelector((state) => state.employeeAuthReducer);
+  const { userInfo, error, message, actionT } = useSelector(state => state.employeeAuthReducer)
 
   useEffect(() => {
-    if (token) dispatch(authenticateEmployee(token));
-  }, [token]);
+    dispatch(authenticateEmployee());
+  }, [dispatch]);
 
+  useEffect(() => {
+    if (error && actionT === "auth") {
+      dispatch(logoutEmployeeUser())
+      router.push('/user/auth/')
+    }
+  }, [error, actionT])
 
   return (
     <>
@@ -31,16 +33,3 @@ export default function singleProject({ token }) {
     </>
   );
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-  const { req } = context;
-
-  const cookies = parse(req.headers.cookie || "");
-  const token = cookies["employeetoken"] || null;
-
-  return {
-    props: {
-      token,
-    },
-  };
-});

@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react'
 import { Box, Button, Typography } from '@mui/material'
 import { Head, WorkUpdate, WorkHistory } from '@/sections'
 import { Layout } from '@/components'
-import { parse } from 'cookie'
 import { authenticateEmployee } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
 import { useSelector, useDispatch } from 'react-redux'
 
-const repoting = ({ token }) => {
+const repoting = () => {
     const dispatch = useDispatch()
-    const { userInfo } = useSelector(state => state.employeeAuthReducer)
+    const { userInfo, error, message, actionT } = useSelector(state => state.employeeAuthReducer)
     const [selectedTab, setSelectedTab] = useState(1);
 
     useEffect(() => {
-        if (token) dispatch(authenticateEmployee(token))
-    }, [token])
+        dispatch(authenticateEmployee())
+    }, [dispatch])
+
+    useEffect(() => {
+        if (error && actionT === "auth") {
+            dispatch(logoutEmployeeUser())
+            router.push('/user/auth/')
+        }
+    }, [error, actionT])
 
     return (
         <>
@@ -39,19 +44,5 @@ const repoting = ({ token }) => {
         </>
     )
 }
-
-export const getServerSideProps = authMiddleware(async (context) => {
-    const { req } = context;
-
-    const cookies = parse(req.headers.cookie || '');
-    const token = cookies['employeetoken'] || null
-
-    return {
-        props: {
-            token
-        }
-    };
-});
-
 
 export default repoting
