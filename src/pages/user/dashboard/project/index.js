@@ -1,11 +1,9 @@
 import { Layout } from '@/components'
-import { AddNewProject, Head, ManageProject, UserMainContainer } from '@/sections'
-import { Box, Grid } from '@mui/material'
+import { Head, ManageProject } from '@/sections'
+import { Box } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { parse } from 'cookie'
 import { authenticateEmployee } from '@/redux/actions/authAction'
-import authMiddleware from '@/middleware'
 import { useRouter } from 'next/router'
 
 const index = () => {
