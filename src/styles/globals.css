@@ -1,0 +1,557 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  --h1-font-size: 2rem;
+  --h2-font-size: 1.5rem;
+  --h3-font-size: 1.25rem;
+  --h4-font-size: 1.125rem;
+  --h5-font-size: 1rem;
+  --h6-font-size: 0.875rem;
+  --primary-font: "Poppins", sans-serif !important;
+  --dark: #000;
+  --grey: #101828;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  font-family: var(--primary-font) !important;
+}
+
+body {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: var(--h1-font-size) !important;
+}
+
+h2 {
+  font-size: var(--h2-font-size) !important;
+}
+
+h3 {
+  font-size: var(--h3-font-size) !important;
+}
+
+h4 {
+  font-size: var(--h4-font-size) !important;
+}
+
+h5 {
+  font-size: var(--h5-font-size) !important;
+}
+
+h6 {
+  font-size: var(--h6-font-size) !important;
+}
+
+.text-dark {
+  color: var(--dark) !important;
+}
+
+.passwordBox {
+  position: relative;
+}
+
+.passwordBox .visibilityBtn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  border-radius: 0.25rem;
+  -webkit-border-radius: 0.25rem;
+  -moz-border-radius: 0.25rem;
+  -ms-border-radius: 0.25rem;
+  -o-border-radius: 0.25rem;
+  z-index: 2;
+}
+
+.btn--dark-outlined,
+.btn--dark {
+  padding: 0.75rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+.btn--dark {
+  background-color: #000 !important;
+  color: #fff !important;
+}
+
+.btn-dark:hover {
+  background-color: #000;
+}
+
+.btn--dark-outlined {
+  background-color: #fff;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+}
+
+.placeHolderImage {
+  width: 81%;
+}
+
+.side-panel {
+  width: 20%;
+  height: 100vh;
+  background-color: var(--grey);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.side-panel-container {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-panel-menu {
+  flex-grow: 1;
+}
+
+.dashboard-main {
+  background-color: #000;
+  height: 100vh;
+  margin-left: 20%;
+  position: relative;
+}
+
+.dashboard-main-container {
+  background-color: #fff;
+  height: 82vh;
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+  right: 0%;
+  overflow-y: auto;
+}
+
+.dashboard-main-container::-webkit-scrollbar {
+  width: 2px;
+  background-color: #f0f0f0;
+}
+
+.dashboard-main-container::-webkit-scrollbar-thumb {
+  background-color: #000;
+}
+
+.dropzone {
+  border: 2px solid #7f56d9;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  height: 6rem;
+  width: 6rem;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.placeholder-container {
+  position: relative;
+  height: 100%;
+}
+
+.placeholder-icon {
+  background-color: #7f56d9;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  padding: 0.25rem;
+}
+
+.placeholder-icon {
+  position: absolute;
+  bottom: 20%;
+  right: -14%;
+}
+
+.dashboard-main-left-card {
+  position: relative;
+  top: -1%;
+  z-index: 2;
+}
+
+.tabs .tab {
+  color: #8a9096;
+  text-transform: capitalize !important;
+  font-size: 1rem;
+  border-radius: 0%;
+  -webkit-border-radius: 0%;
+  -moz-border-radius: 0%;
+  -ms-border-radius: 0%;
+  -o-border-radius: 0%;
+}
+
+.tabs .tab.active {
+  color: #7f56d9;
+  border-bottom: 2px solid #7f56d9;
+}
+
+.image-upload {
+  position: relative;
+}
+
+.image-upload > input {
+  position: absolute;
+  bottom: 10%;
+  right: 50%;
+  z-index: -1;
+  width: 1px;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.image-upload > input::file-selector-button {
+  background-color: transparent;
+  border: 0;
+  outline: none;
+}
+
+.placeholderCirle {
+  cursor: pointer;
+  height: 200px;
+  width: 200px;
+  border: 2px solid #7f56d9;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.addaphoto {
+  position: absolute;
+  bottom: 20%;
+  right: -7%;
+  background-color: #7f56d9;
+}
+
+.addaphoto:hover {
+  background-color: #7f56d9;
+}
+
+.employeeCard {
+  box-shadow: none;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.employeeCard .placeholderCirle {
+  height: 100px;
+  width: 100px;
+}
+
+#employee-detail .dashboard-main-container,
+#TeamMain .dashboard-main-container,
+#projectMain .dashboard-main-container,
+#taskMain .dashboard-main-container {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.empDetail {
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}
+
+.detailAvatar {
+  height: 6.25rem;
+  width: 6.25rem;
+  border: 2px solid #000;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.detailAvatarEditBtn {
+  color: #000;
+  display: flex;
+  align-items: center;
+  border: 1px solid #000;
+}
+
+.empDetailLabel {
+  color: rgba(0, 0, 0, 0.5);
+  font-feature-settings: "clig";
+  -webkit-font-feature-settings: "clig";
+  -moz-font-feature-settings: "clig";
+  font-size: 0.875rem !important;
+}
+
+.TeamCard {
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none;
+  border-radius: 0.75rem;
+  -webkit-border-radius: 0.75rem;
+  -moz-border-radius: 0.75rem;
+  -ms-border-radius: 0.75rem;
+  -o-border-radius: 0.75rem;
+  padding: 1.5rem 4rem;
+  cursor: pointer;
+}
+
+.tab-container {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tab-container .tab {
+  margin-right: 1rem;
+  color: #000;
+  font-weight: 600;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+}
+
+.tab-container .tab.active {
+  border-bottom: 2px solid #000;
+}
+
+.docCard {
+  border: 1px solid #777;
+}
+
+#taskDialog .MuiPaper-root {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  -webkit-border-radius: 0.5rem 0.5rem 0 0;
+  -moz-border-radius: 0.5rem 0.5rem 0 0;
+  -ms-border-radius: 0.5rem 0.5rem 0 0;
+  -o-border-radius: 0.5rem 0.5rem 0 0;
+}
+
+#taskDialog .modalHeader {
+  border-bottom: 1px solid #e0e0e0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  background-color: #fff;
+}
+
+#taskDialog.minimized .MuiPaper-root {
+  height: 9vh;
+}
+
+#taskDialog.maximized .MuiPaper-root {
+  height: 70vh;
+}
+
+.message-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+
+table {
+  border: 1px solid #ddd;
+}
+
+table tr.completed-task td {
+  background-color: #f0f0f0;
+}
+
+table th,
+table td {
+  white-space: nowrap;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+.react-calendar-timeline .rct-header-root {
+  background-color: var(--grey) !important;
+}
+
+.board-view {
+  height: 80vh;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.board-view .list-container {
+  background-color: #f8fafb;
+  flex: 0 0 340px;
+  margin: 1rem;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+  position: relative;
+}
+
+.board-view::-webkit-scrollbar {
+  height: 2px;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -ms-border-radius: 1px;
+  -o-border-radius: 1px;
+}
+
+.board-view::-webkit-scrollbar-track {
+  background-color: #f8fafb;
+}
+
+.board-view::-webkit-scrollbar-thumb {
+  background-color: #000;
+  border-radius: 1px;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  -ms-border-radius: 1px;
+  -o-border-radius: 1px;
+}
+
+.board-view .list-container .list-name {
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}
+
+.board-view .list-container .list-task-container {
+  min-height: 50px;
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar {
+  width: 2px;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar-track {
+  background-color: #8a9096;
+}
+
+.board-view .list-container .list-task-container::-webkit-scrollbar-thumb {
+  background-color: #777;
+}
+
+.board-view .list-container .list-task-container .task-card {
+  border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
+  -moz-border-radius: 0.5rem;
+  -ms-border-radius: 0.5rem;
+  -o-border-radius: 0.5rem;
+}
+
+.board-view .list-container .list-task-container .task-card .assignToBox .date {
+  font-size: 0.875rem !important;
+  color: #8a9096;
+}
+
+.board-view .list-container .list-task-container .task-card .collaborator {
+  display: flex;
+}
+
+.MuiAvatarGroup-avatar {
+  flex-direction: row !important;
+}
+
+#modal .MuiDialog-container {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+#modal .MuiDialog-container .MuiDialog-paper {
+  margin: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  height: 100%;
+  max-height: none;
+  overflow-y: auto;
+}
+
+.whistory {
+  height: 69vh;
+  overflow-y: auto;
+}
+
+#homeBanner {
+  height: 92vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#homeBanner h2 {
+  font-size: 2rem !important;
+  font-weight: 500;
+  color: rgba(61, 71, 77, 0.5);
+  margin-bottom: 1rem;
+}
+
+#homeBanner h1 {
+  font-size: 3.75rem !important;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 1rem;
+}
+
+#homeBanner p {
+  font-size: 1.2rem !important;
+  color: rgba(61, 71, 77, 0.5);
+  margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 600px) {
+  #homeBanner {
+    height: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  #homeBanner h1 {
+    font-size: 2rem !important;
+  }
+
+  #homeBanner h2 {
+    font-size: 1.5rem !important;
+  }
+
+  #homeBanner p {
+    font-size: 1rem !important;
+  }
+}
